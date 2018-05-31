@@ -1,0 +1,9 @@
+	Thanks go to (in temporal order, newer to older):
+
+Martin Klaiber, for pointing out problems and testing
+Mohammed Isam, for having provided PCX reading support
+Matthieu Crapet, for enabling out-of-tree builds
+Marco Barbàra, for testing and critiques
+Vitaly Minko, for testing and debugging on ARM
+Damiano Biagioli, for early testing
+Marta Carbone, for early testing and debugging

@@ -1,0 +1,6 @@
+string collation comparison works
+string collation inequality works
+regular expressions operator works
+single negations on regular expressions work
+double negations on regular expressions work
+string test success

@@ -1,0 +1,16 @@
+* loaded 3 files
+../..//media/image.jpg ../..//media/fim.png ../..//media/image.png 
+*
+* before  reloads
+#cache check for file  ../..//media/image.jpg
+#cache does not have   ../..//media/image.jpg 
+#cache loaded          ../..//media/image.jpg
+* between reloads
+#cache forced to free  ../..//media/image.jpg
+#cache erases          ../..//media/image.jpg
+#cache check for file  ../..//media/image.jpg
+#cache does not have   ../..//media/image.jpg 
+#cache loaded          ../..//media/image.jpg
+* after  reloads
+#cache check for file  ../..//media/image.jpg
+#cache frees           ../..//media/image.jpg

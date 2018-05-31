@@ -1,0 +1,41 @@
+# A test for the help system.
+alias 'dump' "stdout _last_cmd_output; stdout '*';";
+echo "A test for the help system";
+dump;
+help '';
+dump;
+help '-';
+dump;
+help '-h';
+dump;
+help '--';
+dump;
+help '--help';
+dump;
+#
+#help 'commands';
+#dump;
+commands;
+dump;
+#
+#help 'alias';
+#dump;
+alias;
+dump;
+#
+#help 'variables';
+#dump;
+variables;
+dump;
+#
+# need also something like:
+#variables 'g:';
+#dump;
+#variables 'i:';
+#dump;
+#
+#help 'bind';
+#dump;
+bind;
+dump;
+#

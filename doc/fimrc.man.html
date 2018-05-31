@@ -1,0 +1,2056 @@
+<!-- Creator     : groff version 1.21 -->
+<!-- CreationDate: Sun Jan 28 18:18:55 2018 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>fimrc</title>
+
+</head>
+<body>
+
+<h1 align="center">fimrc</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FIM LANGUAGE GRAMMAR">FIM LANGUAGE GRAMMAR</a><br>
+<a href="#COMMANDS REFERENCE">COMMANDS REFERENCE</a><br>
+<a href="#KEYSYMS REFERENCE">KEYSYMS REFERENCE</a><br>
+<a href="#AUTOCOMMANDS REFERENCE">AUTOCOMMANDS REFERENCE</a><br>
+<a href="#VARIABLES REFERENCE">VARIABLES REFERENCE</a><br>
+<a href="#COMMAND LINE USAGE EXAMPLES">COMMAND LINE USAGE EXAMPLES</a><br>
+<a href="#CONFIGURATION FILE EXAMPLE">CONFIGURATION FILE EXAMPLE</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">fimrc -
+<b>fim</b> configuration file and language reference</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>~/.fimrc
+<br>
+/usr/local/etc/fimrc <br>
+fim --script-from-stdin [ {options}
+] &lt; {scriptfile} <br>
+fim --execute-script {scriptfile} [
+{options} ] <br>
+fim --execute-commands {commands} [
+{options} ] <br>
+fim --final-commands {commands} [
+{options} ] <br>
+fim --write-scriptout {scriptfile} [
+{options} ] <br>
+fim --write-scriptout /dev/stdout [
+{options} ]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This page
+explains the <b>fim</b> language, which is used for the
+<b>fimrc</b> configuration files, {scriptfile}s, or
+{commands} passed via command line {options}. This language
+can be used to issue commands (or programs) from the
+internal program command line accessed interactively through
+the &quot;:&quot; key (or rather, the key code specified by
+the &quot;_console_key&quot; variable). One may exit from
+command line mode by pressing the Enter key on an empty line
+(a non empty command line would be submitted for execution),
+or the Esc key (only in SDL mode). The general form of a fim
+command/program is shown in the next section.</p>
+
+<h2>FIM LANGUAGE GRAMMAR
+<a name="FIM LANGUAGE GRAMMAR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This section
+specifies the grammar of the <b>fim</b> language.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Language
+elements surrounded by a single quote (&quot;&rsquo;&quot;)
+are literals.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Warning: at the
+present state, this grammar has conflicts. A future release
+shall fix them.</p>
+
+<p style="margin-left:11%; margin-top: 1em">program: %empty
+<br>
+| statement_list</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">statement_list:
+statement <br>
+| statement &rsquo;;&rsquo; statement_list <br>
+| non_atomic_statements_block statement_list <br>
+| statements_block</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">non_atomic_statements_block:
+&rsquo;{&rsquo; statement_list &rsquo;}&rsquo; <br>
+| INTEGER &rsquo;{&rsquo; statement_list &rsquo;}&rsquo;
+<br>
+| conditional_statement</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">statements_block:
+atomic_statements_block <br>
+| non_atomic_statements_block</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">conditional_statement:
+if_statement <br>
+| loop_statement</p>
+
+<p style="margin-left:11%; margin-top: 1em">if_statement:
+&rsquo;if&rsquo; &rsquo;(&rsquo; expression &rsquo;)&rsquo;
+statements_block <br>
+| &rsquo;if&rsquo; &rsquo;(&rsquo; expression
+&rsquo;)&rsquo; statements_block &rsquo;else&rsquo;
+statements_block</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">loop_statement:
+&rsquo;while&rsquo; &rsquo;(&rsquo; expression
+&rsquo;)&rsquo; statements_block <br>
+| &rsquo;do&rsquo; statements_block &rsquo;while&rsquo;
+&rsquo;(&rsquo; expression &rsquo;)&rsquo;</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">atomic_statements_block:
+statement &rsquo;;&rsquo; <br>
+| statement &rsquo;;&rsquo; &rsquo;;&rsquo; <br>
+| statement &rsquo;;&rsquo; &rsquo;;&rsquo;
+&rsquo;;&rsquo;</p>
+
+<p style="margin-left:11%; margin-top: 1em">statement:
+&rsquo;!&rsquo; arguments <br>
+| INTEGER IDENTIFIER <br>
+| SLASH_AND_REGEXP <br>
+| &rsquo;+&rsquo; UNQUOTED_FLOAT &rsquo;%&rsquo; <br>
+| &rsquo;+&rsquo; QUOTED_FLOAT &rsquo;%&rsquo; <br>
+| &rsquo;+&rsquo; INTEGER &rsquo;%&rsquo; <br>
+| &rsquo;*&rsquo; UNQUOTED_FLOAT <br>
+| &rsquo;*&rsquo; QUOTED_FLOAT <br>
+| &rsquo;*&rsquo; INTEGER <br>
+| UNQUOTED_FLOAT &rsquo;%&rsquo; <br>
+| QUOTED_FLOAT &rsquo;%&rsquo; <br>
+| INTEGER &rsquo;%&rsquo; <br>
+| &rsquo;-&rsquo; UNQUOTED_FLOAT &rsquo;%&rsquo; <br>
+| &rsquo;-&rsquo; QUOTED_FLOAT &rsquo;%&rsquo; <br>
+| &rsquo;-&rsquo; INTEGER &rsquo;%&rsquo; <br>
+| INTEGER <br>
+| &rsquo;-&rsquo; INTEGER <br>
+| IDENTIFIER <br>
+| IDENTIFIER FILE_PATH <br>
+| IDENTIFIER arguments <br>
+| INTEGER IDENTIFIER arguments <br>
+| IDENTIFIER &rsquo;=&rsquo; expression</p>
+
+<p style="margin-left:11%; margin-top: 1em">arguments:
+expression <br>
+| expression arguments</p>
+
+<p style="margin-left:11%; margin-top: 1em">expression:
+&rsquo;(&rsquo; expression &rsquo;)&rsquo; <br>
+| expression &rsquo;.&rsquo; expression <br>
+| &rsquo;!&rsquo; expression <br>
+| expression &rsquo;%&rsquo; expression <br>
+| expression &rsquo;+&rsquo; expression <br>
+| expression &rsquo;-&rsquo; expression <br>
+| expression &rsquo;*&rsquo; expression <br>
+| expression &rsquo;/&rsquo; expression <br>
+| expression &rsquo;&lt;&rsquo; expression <br>
+| expression &rsquo;&gt;&rsquo; expression <br>
+| expression &rsquo;||&rsquo; expression <br>
+| expression BOR expression <br>
+| expression &rsquo;&amp;&amp;&rsquo; expression <br>
+| expression BAND expression <br>
+| expression &rsquo;&gt;=&rsquo; expression <br>
+| expression &rsquo;&lt;=&rsquo; expression <br>
+| expression &rsquo;!=&rsquo; expression <br>
+| expression &rsquo;==&rsquo; expression <br>
+| expression &rsquo;=~&rsquo; expression <br>
+| &rsquo;-&rsquo; expression <br>
+| IDENTIFIER <br>
+| INTEGER <br>
+| QUOTED_FLOAT <br>
+| UNQUOTED_FLOAT <br>
+| STRING</p>
+
+<p style="margin-left:11%; margin-top: 1em">A STRING can be
+either a single quoted string or a double quoted string. A
+floating point number can be either unquoted
+(UNQUOTED_FLOAT) or quoted (QUOTED_FLOAT). A QUOTED_FLOAT is
+a floating point number, either single (&quot;&rsquo;&quot;)
+or double (&quot;&quot;&quot;) quoted. An INTEGER shall be
+an unsigned integer number. An IDENTIFIER shall be one of
+the valid fim commands (see <b>COMMANDS REFERENCE</b> ) or a
+valid alias. A VARIABLE shall be an already declared or
+undeclared variable identifier (see <b>VARIABLES
+REFERENCE</b> ) or a valid alias, created using the
+<b>alias</b> command. The &quot;=~&quot; operator treats the
+right expression as a STRING, and uses is as a regular
+expression for matching purposes. The SLASH_AND_REGEXP is a
+slash (&quot;/&quot;) followed by a STRING, interpreted as a
+regular expression. See <i>regex</i>(1) for regular
+expression syntax.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The way some
+one-line statements are evaluated:</p>
+
+<p style="margin-left:11%; margin-top: 1em">: enter command
+line mode <br>
+:{number} jump to {number}^th image in the list</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>:^</p></td>
+<td width="85%">
+
+
+<p>jump to first image in the list</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>:$</p></td>
+<td width="85%">
+
+
+<p>jump to last image in the list</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">:*{factor} scale the image by
+{factor} <br>
+:{scale}% scale the image to the desired {scale} <br>
+:+{scale}% scale the image up to the desired percentage
+{scale} (relatively to the original) <br>
+:-{scale}% scale the image down to the desired
+percentage {scale} (relatively to the original)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/{regexp}</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>entering the pattern {regexp} (with /) makes fim jump to
+the next image whose filename matches {regexp}</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/*.png$</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>entering this pattern (with /) makes fim jump to the
+next image whose filename ends with &rsquo;png&rsquo;</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/png</p></td>
+<td width="8%">
+</td>
+<td width="8%">
+
+
+<p>a shortcut for /.*png.*</p></td>
+<td width="69%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>!{syscmd}</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>executes the {syscmd} quoted string as an argument to
+the &quot;system&quot; fim command.</p></td></tr>
+</table>
+
+<h2>COMMANDS REFERENCE
+<a name="COMMANDS REFERENCE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>alias</b>
+<br>
+alias [{identifier} [{commands} [{description}]]] <br>
+Without arguments, lists the current aliases. <br>
+With one, shows an identifier&rsquo;s assigned command. <br>
+With two, assigns to an identifier a user defined command or
+sequence of commands. <br>
+With three, also assigns a help string.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>align</b>
+<br>
+align &rsquo;bottom&rsquo;: align to the lower side the
+current image. <br>
+align &rsquo;top&rsquo;: align to the upper side the current
+image.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>autocmd</b>
+<br>
+autocmd {event} {pattern} {commands}: manipulate
+autocommands (inspired from Vim autocmd&rsquo;s). <br>
+Without arguments, list autocommands. <br>
+With arguments, specifies for which type of event and which
+current file open, which commands to execute. <br>
+See the default built-in configuration files for
+examples.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>autocmd_del</b>
+<br>
+autocmd_del: specify autocommands to delete. <br>
+Usage: autocmd_del {event} {pattern} {commands}.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>basename</b>
+<br>
+basename {filename}: returns the basename of {filename} in
+the &rsquo;_last_cmd_output&rsquo; variable.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>bind</b>
+<br>
+bind [{keysym} [{commands}]]: bind a keyboard
+symbol/shortcut {keysym} to {commands}. <br>
+If {keysym} is at least two characters long and begins with
+0 (zero), the integer number after the 0 will be treated as
+a raw keycode to bind the specified {keysym} to. <br>
+Use the &rsquo;_verbose_keys&rsquo; variable to discover
+(display device dependent) raw keys. <br>
+Key binding is dynamical, so you can rebind keys even during
+program&rsquo;s execution. <br>
+You can get a list of valid symbols (keysyms) by invoking
+dump_key_codes or in the man page.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>cd</b> <br>
+cd {path}: change the current directory to {path}. <br>
+cd &rsquo;-&rsquo; will change to the previous current
+directory (before the last &rsquo;:cd {path}&rsquo;
+command).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>clear</b>
+<br>
+clear: clear the virtual console.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>commands</b>
+<br>
+commands: display the existing commands.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>color</b>
+<br>
+color [desaturate]: desaturate the displayed image colors.
+<br>
+color [negate]: negate the displayed image colors. <br>
+color [colorblind|c|deuteranopia|d]: simulate a form of the
+deuteranopia color vision deficiency (cvd). <br>
+color [protanopia|p]: simulate a form of the protanopia cvd.
+<br>
+color [tritanopia|t]: simulate a form of the tritanopia cvd.
+<br>
+color [daltonize|D]: if following a cvd specification, will
+attempt correcting it. <br>
+color [identity]: populate the image with &rsquo;RGB
+identity&rsquo; pixels. <br>
+To get back the original you will have to reload the
+image.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>desc</b>
+<br>
+desc &rsquo;load&rsquo; {filename} [{sepchar}]: load
+description file {filename}, using the optional {sepchar}
+character as separator. <br>
+desc &rsquo;reload&rsquo;: load once again description files
+specified at the command line with
+--load-image-descriptions-file,
+with respective separators. <br>
+desc [&rsquo;-all&rsquo;]
+[&rsquo;-append&rsquo;] &rsquo;save&rsquo; {filename}
+[{sepchar}]: save current list descriptions to file
+{filename}, using the optional {sepchar} character as
+separator, and if &rsquo;-all&rsquo; is present will
+save the variables, and if &rsquo;-append&rsquo; is
+present, will only append, and if
+&rsquo;-nooverw&rsquo; is present, will not overwrite
+existing files. <br>
+See documentation of
+--load-image-descriptions-file
+for the format of {filename}.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>display</b>
+<br>
+display [&rsquo;reinit&rsquo; {string}]|&rsquo;resize&rsquo;
+{w} {h}]: display the current file contents. <br>
+If &rsquo;reinit&rsquo; switch is supplied, the
+&rsquo;{string}&rsquo; specifier will be used to
+reinitialize (e.g.: change resolution, window system
+options) the display device. <br>
+See documentation for the --output-device
+command line switch for allowed values of {string}. <br>
+If &rsquo;resize&rsquo; and no argument, will ask the window
+manager to size the window like the image. <br>
+If &rsquo;resize&rsquo; and two arguments, these will be
+used as width and height of window, to set.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>dump_key_codes</b>
+<br>
+dump_key_codes: dump the active key codes (unescaped, for
+inspection purposes).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>echo</b>
+<br>
+echo {args}: print the {args} on console.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>else</b>
+<br>
+if(expression){action;}[&rsquo;else&rsquo;{action;}]: see
+else.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>eval</b>
+<br>
+eval {args}: evaluate {args} as commands, executing
+them.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>exec</b>
+<br>
+exec {filename(s)}: execute script {filename(s)}.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>font</b>
+<br>
+font &rsquo;scan&rsquo; [{dirname}]: scan {dirname} or
+/usr/share/consolefonts looking for fonts in the internal
+fonts list. <br>
+font &rsquo;load&rsquo; {filename}: load font {filename}.
+<br>
+font &rsquo;next&rsquo;/&rsquo;prev&rsquo;: load
+next/previous font in the internal fonts list. <br>
+font &rsquo;info&rsquo;: print current font filename.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>getenv</b>
+<br>
+getenv {identifier}: display the value of the
+&rsquo;{identifier}&rsquo; environment variable.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>goto</b>
+<br>
+goto
+{[&rsquo;+&rsquo;|&rsquo;-&rsquo;]{number}[&rsquo;%&rsquo;][&rsquo;f&rsquo;|&rsquo;p&rsquo;]}
+| {/{regexp}/} | {&rsquo;+//&rsquo;} |
+{&rsquo;+/&rsquo;|&rsquo;-/&rsquo;}[C] |
+{{&rsquo;+&rsquo;|&rsquo;-&rsquo;}{identifier}[&rsquo;+&rsquo;]}:
+jump to an image. <br>
+If {number} is given, and not surrounded by any specifier,
+will go to image at index {number}. <br>
+If followed by &rsquo;%&rsquo;, the effective index will be
+computed as a percentage to the current available images.
+<br>
+If prepended by &rsquo;-&rsquo; or &rsquo;+&rsquo;,
+the jump will be relative to the current index. <br>
+The &rsquo;f&rsquo; specifier asks for the jump to occur
+within the files. <br>
+The &rsquo;p&rsquo; specifier asks for the jump to occur in
+terms of pages, within the current file. <br>
+If /{regexp}/ is given, will jump to the first image
+matching the given /{regexp}/ regular expression pattern.
+<br>
+If given &rsquo;+//&rsquo;, will jump to the first different
+image matching the last given regular expression pattern.
+<br>
+With &rsquo;+/&rsquo;C or &rsquo;-/&rsquo;C will jump
+to next or previous file according to C: if &rsquo;s&rsquo;
+if same directory, if &rsquo;d&rsquo; if down the directory
+hierarchy, if &rsquo;u&rsquo; if down the directory
+hierarchy, if &rsquo;b&rsquo; if same basename, if upper
+case match is negative, if missing defaults to
+&rsquo;S&rsquo; (jump to file in different dir). <br>
+If {identifier|identifier2...}] is encountered after a
+&rsquo;+&rsquo; or &rsquo;-&rsquo; sign, jump to next
+or previous image having a different value for any
+corresponding i:{identifier} (a trailing &rsquo;+&rsquo;
+will require a non empty value). <br>
+Match will occur on both file name and description,
+eventually loaded via desc or
+--load-image-descriptions-file;
+see also &rsquo;_lastgotodirection&rsquo; and
+&rsquo;_re_search_opts&rsquo;. <br>
+You can specify multiple arguments to goto: those after the
+first triggering a jump will be ignored. <br>
+Executes autocommands for events PreGoto and PostGoto.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>help</b>
+<br>
+help [{identifier}]: provide online help, assuming
+{identifier} is a variable, alias, or command identifier.
+<br>
+If {identifier} begins with &rsquo;/&rsquo;, the search will
+be on the help contents and a list of matching items will be
+given instead. <br>
+A list of commands can be obtained simply invoking
+&rsquo;commands&rsquo;; a list of aliases with
+&rsquo;alias&rsquo;; a list of bindings with
+&rsquo;bind&rsquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>if</b> <br>
+if(expression){action;}[&rsquo;else&rsquo;{action;}]: see
+&rsquo;else&rsquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>info</b>
+<br>
+info: display information about the current file.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>limit</b>
+<br>
+limit
+{&rsquo;-list&rsquo;|&rsquo;-listall&rsquo;}
+&rsquo;variable&rsquo;|[&rsquo;-further&rsquo;|&rsquo;-merge&rsquo;|&rsquo;-subtract&rsquo;]
+[{expression} |{variable} {value}]: A browsable file list
+filtering function (like limiting in the &rsquo;mutt&rsquo;
+program). Uses information loaded via
+--load-image-descriptions-file.
+<br>
+If invoked with
+&rsquo;-list&rsquo;/&rsquo;-listall&rsquo; only,
+will list the current description variable ids. <br>
+If invoked with
+&rsquo;-list&rsquo;/&rsquo;-listall&rsquo;
+&rsquo;id&rsquo;, will list set values for the variable
+&rsquo;id&rsquo;. <br>
+If &rsquo;-further&rsquo; is present, will start with
+the current list; if not, with the full list. <br>
+If &rsquo;-merge&rsquo; is present, new matches will
+be merged in the existing list and sorted. <br>
+If &rsquo;-subtract&rsquo; is present, sort and filter
+out matches. <br>
+If {variable} and {values} are provided, limit to files
+having property {variable} set to {value}. <br>
+If {expression} is one exclamation point (&rsquo;!&rsquo;),
+will limit to the currently marked files only. <br>
+If {expression} is &rsquo;~!&rsquo; will limit to files with
+unique basename. <br>
+if &rsquo;~=&rsquo;, to files with duplicate basename. <br>
+if &rsquo;~^&rsquo;, to the first of the files with
+duplicate basename. <br>
+if &rsquo;~$&rsquo;, to the last of the files with duplicate
+basename. <br>
+On &rsquo;~i&rsquo; [MINIDX][-][MAXIDX], (each a
+number eventually followed by a multiplier &rsquo;K&rsquo;)
+will limit on filenames in position MINIDX to MAXIDX. <br>
+On &rsquo;~z&rsquo; will limit to files having the current
+file&rsquo;s size. <br>
+on &rsquo;~z&rsquo; [MINSIZE][-][MAXSIZE], (each a
+number eventually followed by a multiplier among
+&rsquo;k&rsquo;,&rsquo;K&rsquo;,&rsquo;m&rsquo;,&rsquo;M&rsquo;)
+will limit on filesize within these limits. <br>
+on &rsquo;~d&rsquo; will limit to files having the current
+file&rsquo;s date +- one day. <br>
+on &rsquo;~d&rsquo; [MINTIME][-][MAXTIME], (each the
+count of seconds since the Epoch (First of Jan. of 1970) or
+a date as DD/MM/YYYY) will limit on file time (struct
+stat&rsquo;s &rsquo;st_mtime&rsquo;, in seconds) within this
+interval. <br>
+For other values of {expression}, limit to files whose
+description string matches {expression}. <br>
+Invoked with no arguments, the original browsable files list
+is restored.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>list</b>
+<br>
+list: display the files list. <br>
+list &rsquo;random_shuffle&rsquo;: randomly shuffle the file
+list. <br>
+list &rsquo;reverse&rsquo;: reverse the file list. <br>
+list &rsquo;clear&rsquo;: clear the file list. <br>
+list &rsquo;sort&rsquo;: sort the file list. <br>
+list &rsquo;sort_basename&rsquo;: sort the file list
+according to base name. <br>
+list &rsquo;sort_fsize&rsquo;: sort the file list according
+to file size. <br>
+list &rsquo;sort_mtime&rsquo;: sort the file list according
+to modification date. <br>
+list &rsquo;pop&rsquo;: pop the last file from the files
+list. <br>
+list &rsquo;remove&rsquo; [{filename(s)}]: remove the
+current file, or the {filename(s)}, if specified. <br>
+list &rsquo;push&rsquo; {filename(s)}: push {filename(s)} to
+the back of the files list. <br>
+list &rsquo;filesnum&rsquo;: display the number of files in
+the files list. <br>
+list &rsquo;mark&rsquo; [{args}]: mark image file names for
+stdout printing at exit, with {args} mark the ones matching
+according to the rules of the &rsquo;limit&rsquo; command,
+otherwise the current file. <br>
+list &rsquo;unmark&rsquo; [{args}]: unmark marked image file
+names, with {args} unmark the ones matching according to the
+rules of the &rsquo;limit&rsquo; command, otherwise the
+current file. <br>
+list &rsquo;marked&rsquo;: show which files have been marked
+so far. <br>
+list &rsquo;dumpmarked&rsquo;: dump to stdout the marked
+files (you will want usually to &rsquo;unmarkall&rsquo;
+afterwards). <br>
+list &rsquo;markall&rsquo;: mark all the current list files.
+<br>
+list &rsquo;unmarkall&rsquo;: unmark all the marked files.
+<br>
+list &rsquo;pushdir&rsquo; {dirname}: will push all the
+files in {dirname}, when matching the regular expression in
+variable _pushdir_re or, if empty, from constant regular
+expression &rsquo;.JPG$|.PNG$|.GIF$|.BMP$|.TIFF$|.TIF$
+|.JPEG$|.JFIF$|.PPM$|.PGM$|.PBM$|.PCX$&rsquo;. <br>
+list &rsquo;pushdirr&rsquo; {dirname}: like pushdir, but
+will also push encountered directory entries recursively.
+<br>
+list &rsquo;swap&rsquo;: will move the current image
+filename to the first in the list (you&rsquo;ll have to
+invoke reload to see the effect). <br>
+Of the above commands, several will be temporarily non
+available for the duration of a background load (enabled by
+--background-recursive), which will last
+until _loading_in_background is 0.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>load</b>
+<br>
+load: load the image, if not yet loaded (see also
+&rsquo;reload&rsquo;). <br>
+Executes autocommands for events PreLoad and PostLoad.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pan</b> <br>
+pan
+{&rsquo;down&rsquo;|&rsquo;up&rsquo;|&rsquo;left&rsquo;|&rsquo;right&rsquo;|&rsquo;ne&rsquo;|&rsquo;nw&rsquo;|&rsquo;se&rsquo;|&rsquo;sw&rsquo;}[+-]
+[{steps}[&rsquo;%&rsquo;]]: pan the image {steps} pixels in
+the desired direction. <br>
+If the &rsquo;%&rsquo; specifier is present, {steps} will be
+treated as a percentage of current screen dimensions. <br>
+If {steps} is not specified, the &rsquo;_steps&rsquo;
+variable will be used. <br>
+If present, the &rsquo;_hsteps&rsquo; variable will be
+considered for horizontal panning. <br>
+A &rsquo;+&rsquo; or &rsquo;-&rsquo; sign at the end
+of the first argument will make jump to next or prev if
+border is reached. <br>
+If present, the &rsquo;_vsteps&rsquo; variable will be
+considered for vertical panning. <br>
+The variables may be terminated by the &rsquo;%&rsquo;
+specifier. <br>
+Executes autocommands for events PrePan and PostPan.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>popen</b>
+<br>
+popen {syscmd}: pipe a command, invoking popen(): spawns a
+shell, invoking &rsquo;{syscmd}&rsquo; and executing as fim
+commands the output of &rsquo;{syscmd}&rsquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pread</b>
+<br>
+pread {args}: execute {args} as a shell command and read the
+output as an image file (using &rsquo;popen&rsquo;).</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>prefetch</b>
+<br>
+prefetch: prefetch (read into the cache) the two nearby
+image files (next and previous), for a faster subsequent
+opening. <br>
+Executes autocommands for events PrePrefetch and
+PostPrefetch. <br>
+See also the &rsquo;_want_prefetch&rsquo; variable.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwd</b> <br>
+pwd: print the current directory name, and updates the
+&rsquo;_pwd&rsquo; variable.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>quit</b>
+<br>
+quit [{number}]: terminate the program. <br>
+If {number} is specified, use it as the program return
+status. <br>
+Note that autocommand &rsquo;PostInteractiveCommand&rsquo;
+does not trigger after this command.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>recording</b>
+<br>
+recording &rsquo;start&rsquo;: start recording the executed
+commands. <br>
+recording &rsquo;stop&rsquo;: stop recording the executed
+commands. <br>
+recording &rsquo;dump&rsquo;: dump in the console the record
+buffer. <br>
+recording &rsquo;execute&rsquo;: execute the record buffer.
+<br>
+recording &rsquo;repeat_last&rsquo;: repeat the last
+performed action.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>redisplay</b>
+<br>
+redisplay: re-display the current file contents.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>reload</b>
+<br>
+reload [{arg}]: load the image into memory. <br>
+If {arg} is present, will force reloading, bypassing the
+cache (see also &rsquo;load&rsquo;). <br>
+Executes autocommands for events PreReload and
+PostReload.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>rotate</b>
+<br>
+rotate {number}: rotate the image the specified amount of
+degrees. If unspecified, by one. If you are interested in
+orthogonal rotations, see &rsquo;_orientation&rsquo; and
+related aliases. <br>
+Executes autocommands for events PreScale and PostScale.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>scale</b>
+<br>
+scale
+{[&rsquo;+&rsquo;|&rsquo;-&rsquo;]{value}[&rsquo;%&rsquo;]|&rsquo;*&rsquo;{value}|&rsquo;w&rsquo;|&rsquo;h&rsquo;|&rsquo;a&rsquo;|&rsquo;b&rsquo;|&rsquo;+[+-*/]&rsquo;|[&rsquo;&lt;&rsquo;|&rsquo;&gt;&rsquo;]}:
+scale the image according to a scale {value} (e.g.:
+0.5,40%,&rsquo;w&rsquo;,&rsquo;h&rsquo;,&rsquo;a&rsquo;,&rsquo;b&rsquo;).
+<br>
+If given &rsquo;*&rsquo; and a value, will multiply the
+current scale by that value. <br>
+If given &rsquo;w&rsquo;, will scale according to the screen
+width. <br>
+If given &rsquo;h&rsquo;, scale to the screen height. <br>
+If given &rsquo;a&rsquo;, to the minimum of &rsquo;w&rsquo;
+and &rsquo;h&rsquo;. <br>
+If given &rsquo;b&rsquo;, like &rsquo;a&rsquo;, provided
+that the image width exceeds &rsquo;w&rsquo; or
+&rsquo;h&rsquo;. <br>
+If {value} is a number, will scale relatively to the
+original image width. <br>
+If the number is followed by &rsquo;%&rsquo;, the relative
+scale will be treated on a percent scale. <br>
+If given &rsquo;++&rsquo;(&rsquo;+-&rsquo;), will
+increment (decrement) the &rsquo;_magnify_factor&rsquo;,
+&rsquo;_reduce_factor&rsquo; variables by
+&rsquo;_scale_factor_delta&rsquo;. <br>
+If given &rsquo;+*&rsquo;(&rsquo;+/&rsquo;), will multiply
+(divide) the &rsquo;_magnify_factor&rsquo;,
+&rsquo;_reduce_factor&rsquo; variables by
+&rsquo;_scale_factor_multiplier&rsquo;. <br>
+If given &rsquo;&lt;&rsquo; or &rsquo;&gt;&rsquo;, will
+shrink or magnify image using nearest mipmap (cached
+pre-scaled version). <br>
+Executes autocommands for events PreScale and PostScale.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>scroll</b>
+<br>
+scroll: scroll down the image, going next when hitting the
+bottom. <br>
+scroll &rsquo;forward&rsquo;: scroll the image as we were
+reading left to right (see
+&rsquo;_scroll_skip_page_fraction&rsquo; variable). <br>
+Executes autocommands for events PrePan and PostPan.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>set</b> <br>
+set: returns a list of variables which are set. <br>
+set {identifier}: returns the value of variable
+{identifier}. <br>
+set {identifier} {commands}: sets variable {identifier} to
+value {commands}.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>set_commandline_mode</b>
+<br>
+set_commandline_mode: set console mode.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>set_interactive_mode</b>
+<br>
+set_interactive_mode: set interactive mode.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>sleep</b>
+<br>
+sleep [{number}=1]: sleep for the specified (default 1)
+number of seconds.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>status</b>
+<br>
+status: set the status line to the collation of the given
+arguments.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>stdout</b>
+<br>
+stdout {args}: writes to stdout its arguments {args}.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>system</b>
+<br>
+system {syscmd}: get the output of executing the {syscmd}
+system command. Uses the popen() system call. Usually popen
+invokes &quot;/bin/sh -c {syscmd}&quot;. This might
+not handle a multi-word command; in that case you will
+have to put it into a script. See &rsquo;man popen&rsquo;
+for more.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>variables</b>
+<br>
+variables: display the existing variables.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>unalias</b>
+<br>
+unalias {identifier} | &rsquo;-a&rsquo;: delete the
+alias {identifier} or all aliases (use
+&rsquo;-a&rsquo;, not -a).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>unbind</b>
+<br>
+unbind {keysym}: unbind the action associated to a specified
+{keysym} <br>
+If {keysym} is at least two characters long and begins with
+0 (zero), the integer number after the 0 will be treated as
+a raw keycode to bind the specified {keysym} to. <br>
+Use the &rsquo;_verbose_keys&rsquo; variable to discover
+(display device dependent) raw keys.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>while</b>
+<br>
+while(expression){action;}: A conditional cycle construct.
+<br>
+May be interrupted by hitting the &rsquo;Esc&rsquo; or the
+&rsquo;:&rsquo; key.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>window</b>
+<br>
+window {args}: this command is disabled.</p>
+
+<h2>KEYSYMS REFERENCE
+<a name="KEYSYMS REFERENCE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">&quot; &quot;
+&quot;!&quot; &quot;&quot;&quot; &quot;#&quot; &quot;$&quot;
+&quot;%&quot; &quot;&amp;&quot; &quot;&rsquo;&quot;
+&quot;(&quot; &quot;)&quot; &quot;*&quot; &quot;+&quot;
+&quot;,&quot; &quot;-&quot; &quot;.&quot;
+&quot;/&quot; &quot;0&quot; &quot;1&quot; &quot;2&quot;
+&quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot;
+&quot;7&quot; &quot;8&quot; &quot;9&quot; &quot;:&quot;
+&quot;;&quot; &quot;&lt;&quot; &quot;=&quot;
+&quot;&gt;&quot; &quot;?&quot; &quot;@&quot; &quot;A&quot;
+&quot;Any&quot; &quot;B&quot; &quot;BackSpace&quot;
+&quot;Backspace&quot; &quot;C&quot; &quot;C-a&quot;
+&quot;C-b&quot; &quot;C-c&quot;
+&quot;C-d&quot; &quot;C-e&quot;
+&quot;C-f&quot; &quot;C-g&quot;
+&quot;C-h&quot; &quot;C-i&quot;
+&quot;C-j&quot; &quot;C-k&quot;
+&quot;C-l&quot; &quot;C-m&quot;
+&quot;C-n&quot; &quot;C-o&quot;
+&quot;C-p&quot; &quot;C-q&quot;
+&quot;C-r&quot; &quot;C-s&quot;
+&quot;C-t&quot; &quot;C-u&quot;
+&quot;C-v&quot; &quot;C-w&quot;
+&quot;C-x&quot; &quot;C-y&quot;
+&quot;C-z&quot; &quot;D&quot; &quot;Del&quot;
+&quot;Down&quot; &quot;E&quot; &quot;End&quot;
+&quot;Enter&quot; &quot;Esc&quot; &quot;F&quot;
+&quot;G&quot; &quot;H&quot; &quot;Home&quot; &quot;I&quot;
+&quot;Ins&quot; &quot;J&quot; &quot;K&quot; &quot;L&quot;
+&quot;Left&quot; &quot;M&quot; &quot;N&quot; &quot;O&quot;
+&quot;P&quot; &quot;PageDown&quot; &quot;PageUp&quot;
+&quot;Q&quot; &quot;R&quot; &quot;Right&quot; &quot;S&quot;
+&quot;T&quot; &quot;Tab&quot; &quot;U&quot; &quot;Up&quot;
+&quot;V&quot; &quot;W&quot; &quot;X&quot; &quot;Y&quot;
+&quot;Z&quot; &quot;[&quot; &quot;\&quot; &quot;]&quot;
+&quot;^&quot; &quot;_&quot; &quot;&rsquo;&quot;
+&quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;
+&quot;e&quot; &quot;f&quot; &quot;g&quot; &quot;h&quot;
+&quot;i&quot; &quot;j&quot; &quot;k&quot; &quot;l&quot;
+&quot;m&quot; &quot;n&quot; &quot;o&quot; &quot;p&quot;
+&quot;q&quot; &quot;r&quot; &quot;s&quot; &quot;t&quot;
+&quot;u&quot; &quot;v&quot; &quot;w&quot; &quot;x&quot;
+&quot;y&quot; &quot;z&quot; &quot;{&quot; &quot;|&quot;
+&quot;}&quot; &quot;~&quot;</p>
+
+<h2>AUTOCOMMANDS REFERENCE
+<a name="AUTOCOMMANDS REFERENCE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Available
+autocommands are: PreScale, PostScale, PrePan, PostPan,
+PreRedisplay, PostRedisplay, PreDisplay, PostDisplay,
+PrePrefetch, PostPrefetch, PreReload, PostReload, PreLoad,
+PostLoad, PreGoto, PostGoto, PreConfigLoading,
+PostConfigLoading, PreHardcodedConfigLoading,
+PostHardcodedConfigLoading, PreUserConfigLoading,
+PostUserConfigLoading, PreGlobalConfigLoading,
+PostGlobalConfigLoading, PreInteractiveCommand,
+PostInteractiveCommand, PreExecutionCycle,
+PostExecutionCycle, PreExecutionCycleArgs, PreWindow,
+PostWindow, and they are triggered on actions as suggested
+by their name. <br>
+Those associated to actual commands are mentioned in the
+associated commands reference.</p>
+
+<h2>VARIABLES REFERENCE
+<a name="VARIABLES REFERENCE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">If undeclared,
+a variable will evaluate to 0.</p>
+
+<p style="margin-left:11%; margin-top: 1em">When assigning
+a variable to a string, use single or double quoting,
+otherwise it will be treated as a number.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The namespaces
+in which variables may exist are: current image, global. A
+namespace is specified by a prefix, which can be:
+&rsquo;i:&rsquo;, be prepended to the variable name. The
+global namespace is equivalent to the empty
+one:&rsquo;&rsquo;. The special variable i:* expands to the
+collation of all the name-value pairs for the current
+image.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In the
+following, the [internal] variables are the ones referenced
+in the source code (not including the hardcoded
+configuration, which may be inspected and/or invalidated by
+the user at runtime).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>_TERM</b>
+[out,g:] the environment TERM variable. <b><br>
+__exif_flipped</b> [out,i:] flipping information, read from
+the EXIF tags of a given image. <b><br>
+__exif_mirrored</b> [out,i:] mirroring information, read
+from the EXIF tags of a given image. <b><br>
+__exif_orientation</b> [out,i:] orientation information in
+the same format of _orientation, read from the orientation
+EXIF tags (i:EXIF_Orientation). <b><br>
+_all_file_loaders</b> [out,g:] space-separated list of
+hardcoded file loaders usable with _file_loader. <b><br>
+_archive_files</b> [in,g:] Regular expression matching
+filenames to be treated as (multipage) archives. If empty,
+&quot;.*(RAR|ZIP|TAR|TAR.GZ|TGZ|TAR.BZ2|TBZ|TBZ2|CBR|CBZ|LHA|7Z|XAR|ISO)$&quot;
+will be used. Within each archive, only filenames matching
+the regular expression in the _pushdir_re variable will be
+considered for opening. <b><br>
+_autocmd_trace_stack</b> [in,g:] dump to stdout autocommands
+(autocmd) stack trace during their execution (for debugging
+purposes). <b><br>
+_autodesaturate</b> [in,g:] if 1, will desaturate images by
+default. <b><br>
+_autoflip</b> [in,g:] if 1, will flip images by default.
+<b><br>
+_automirror</b> [in,g:] if 1, will mirror images by default.
+<b><br>
+_autonegate</b> [in,g:] if 1, will negate images by default.
+<b><br>
+_autotop</b> [in,g:] if 1, will align to the top freshly
+loaded images. <b><br>
+_buffered_in_tmpfile</b> [out,i:] if an image has been
+temporarily converted and decoded from a temporary file, its
+name is here. <b><br>
+_cache_control</b> [in,g:] string for cache control. if it
+starts with &rsquo;m&rsquo; mipmaps will be cached; if it
+starts with &rsquo;M&rsquo; then not. otherwise defaults
+will apply. <b><br>
+_cache_status</b> [out,g:] string with current information
+on cache status. <b><br>
+_cached_images</b> [out,g:] the number of images currently
+cached. <b><br>
+_caption_over_image</b> [in,g:] if set not to 0, will
+display a custom comment string specified according to the
+value of_caption_over_image_fmt; if larger than 1, with
+black background; if 3, image will be drawn possibly below.
+It will take at most half of the screen. <b><br>
+_caption_over_image_fmt</b> [in,g:] custom info format
+string, displayed in a caption over the image; if unset:
+i:_comment; otherwise a custom format string specified just
+as _info_fmt_str. <b><br>
+_command_expansion</b> [in,g:] if 1, will enable
+autocompletion (on execution) of alias and command strings.
+<b><br>
+_comment</b> [i:,out] the image comment, extracted from the
+image file (if any). <b><br>
+_console_buffer_free</b> [out,g:] amount of unused memory in
+the output console buffer. <b><br>
+_console_buffer_total</b> [out,g:] amount of memory
+allocated for the output console buffer. <b><br>
+_console_buffer_used</b> [out,g:] amount of used memory in
+the output console buffer. <b><br>
+_console_key</b> [in,g:] the key binding (an integer
+variable) for spawning the command line; will have
+precedence over any other binding. <b><br>
+_console_lines</b> [out,g:] the number of buffered output
+console text lines. <b><br>
+_console_offset</b> [in,out,g:] position of the text
+beginning in the output console, expressed in lines. <b><br>
+_debug_commands</b> [in,g:] debugging option string for
+printing out . if containing &rsquo;a&rsquo;, print out
+autocmd info; if containing &rsquo;c&rsquo;, print out each
+command; if containing &rsquo;k&rsquo;, print out each
+pressed key; if containing &rsquo;j&rsquo;, print
+interpreter internal steps; if containing &rsquo;B&rsquo;,
+clear screen and print background loading files; if
+containing &rsquo;C&rsquo;, print cache activity. <b><br>
+_device_string</b> [out,g:] the current display device
+string. <b><br>
+_display_as_binary</b> [in,g:] will force loading of the
+specified files as pixelmaps (no image decoding will be
+performed); if 1, using one bit per pixel; if 24, using 24
+bits per pixel; otherwise will load and decode the files as
+usual. <b><br>
+_display_as_rendered_text</b> [in,g:] will force loading of
+the specified files as text files (no image decoding will be
+performed); if 1; otherwise will load and decode the files
+as usual. <b><br>
+_display_busy</b> [in,g:] if 1, will display a message on
+the status bar when processing. <b><br>
+_display_console</b> [in,g:] if 1, will display the output
+console. <b><br>
+_display_status</b> [in,g:] if 1, will display the status
+bar. <b><br>
+_display_status_bar</b> [in,g:] if 1, will display the
+status bar. <b><br>
+_display_status_fmt</b> [in,g:] custom info format string,
+displayed in the lower left corner of the status bar; if
+unset: full pathname; otherwise a custom format string
+specified just as _info_fmt_str. <b><br>
+_do_sanity_check</b> [in,experimental,g:] if 1, will execute
+a sanity check on startup. <b><br>
+_downscale_huge_at_load</b> [in,g:] if 1, will downscale
+automatically huge images at load time. <b><br>
+_exiftool_comment</b> [out,g:] comment extracted via the
+exiftool interface; see _use_exiftool. <b><br>
+_fbfont</b> [out,g:] The current console font file string.
+If the internal hardcoded font has been used, then its value
+is &quot;fim://&quot;. <b><br>
+_fbfont_as_screen_fraction</b> [in,g:] The rendered text
+will be scaled at least to this (integer) fraction of the
+screen. Disable font autoscaling with -1. (Only
+enabled if configured with
+--with-font-magnifying-factor=FACTOR,
+with FACTOR&lt;1). <b><br>
+_fbfont_magnify_factor</b> [in,g:] The rendered text will
+use a font magnified by this (integer) factor. Maximal value
+is &quot;16&quot;. (Only enabled if configured with
+--with-font-magnifying-factor=FACTOR,
+with FACTOR&lt;1). <b><br>
+_fbfont_verbosity</b> [in,g:] if &gt; 0, verbose font
+loading <b><br>
+_file_load_time</b> [out,i:] time taken to load the file and
+decode the image, in seconds. <b><br>
+_file_loader</b> [in,i:,g:] if not empty, this string will
+force a file loader (among the ones listed in the -V
+switch output); [out] i:_file_loader stores the loader of
+the current image. <b><br>
+_fileindex</b> [out,g:] the current image numeric index.
+<b><br>
+_filelistlen</b> [out,g:] current image list length (number
+of visible images). <b><br>
+_filename</b> [out,i:] the current file name string. <b><br>
+_fim_bpp</b> [out,g:] the bits per pixel count. <b><br>
+_fim_default_config_file_contents</b> [out,g:] the contents
+of the default (hardcoded) configuration file (executed
+after the minimal hardcoded config). <b><br>
+_fim_default_grammar_file_contents</b> [out,g:] the contents
+of the default (hardcoded) grammar file. <b><br>
+_fim_scriptout_file</b> [in,g:] the name of the file to
+write to when recording sessions. <b><br>
+_fim_version</b> [out,g:] fim version number; may be used
+for keeping compatibility of fim scripts across evolving
+versions. <b><br>
+_hsteps</b> [in,g:] the default steps, in pixels, when
+panning images horizontally (overrides steps). <b><br>
+_ignorecase</b> [in,g:] if 1, will allow for case
+insensitive regexp-based match in autocommands
+(autocmd). <b><br>
+_info_fmt_str</b> [in,g:] custom info format string,
+displayed in the lower right corner of the status bar; may
+contain ordinary text and special &rsquo;expando&rsquo;
+sequences. These are: %p for current scale, in percentage;
+%w for width; %h for height; %i for image index in list; %k
+for the value of i:_comment (comment description) variable
+in square brackets; %l for current image list length; %L for
+flip/mirror/orientation information; %P for page
+information; %F for file size; %M for screen image memory
+size; %m for memory used by mipmap; %C for memory used by
+cache; %T for total memory used (approximation); %R for
+total max memory used (as detected by getrusage()); %n for
+the current file path name; %N for the current file path
+name basename; ; %c for centering information; %v for the
+fim program/version identifier string; %% for an ordinary %.
+A sequence like %?VAR?EXP? expands to EXP if i:VAR is set;
+EXP will be copied verbatim except for contained sequences
+of the form %:VAR:, which will be expanded to the value of
+variable i:VAR; this is meant to be used like in e.g.
+&rsquo;%?EXIF_DateTimeOriginal?[%:EXIF_DateTimeOriginal:]?&rsquo;,
+where the EXIF-set variable EXIF_DateTimeOriginal
+(make sure you have libexif for this) will be used only if
+present. <b><br>
+_inhibit_display</b> [internal,g:] if 1, will inhibit
+display. <b><br>
+_last_cmd_output</b> [out,experimental,g:] the last command
+output. <b><br>
+_last_file_loader</b> [out,g:] after each image load,
+_last_file_loader will be set to the last file loader used.
+<b><br>
+_last_system_output</b> [out,experimental,g:] the standard
+output of the last call to the system command. <b><br>
+_lastfileindex</b> [out,g:] the last visited image numeric
+index. Useful for jumping back and forth easily between two
+images with &rsquo;goto _lastfileindex&rsquo;. <b><br>
+_lastgotodirection</b> [out,g:] the last file goto direction
+(either string &rsquo;+1&rsquo; or string
+&rsquo;-1&rsquo;). <b><br>
+_load_default_etc_fimrc</b> [in,g:] if 1 at startup, will
+load the system wide initialization file. <b><br>
+_load_fim_history</b> [in,g:] if 1 on startup, will load the
+~/.fim_history file on startup. <b><br>
+_load_hidden_dirs</b> [in,g:] if not 1, when pushing
+directories/files, those whose name begins with a dot (.)
+will be skipped. <b><br>
+_loading_in_background</b> [out,g:] 1 if program has been
+invoked with --background-recursive and
+still loading in background. <b><br>
+_lwidth</b> [in,g:] if&gt;0, will force the output console
+text width. <b><br>
+_magnify_factor</b> [in,g:] the image scale multiplier used
+when magnifying images size. <b><br>
+_max_cached_images</b> [in,g:] the maximum number of images
+after which evictions will be forced. Setting this to 0 (no
+limits) is ok provided _max_cached_memory is set
+meaningfully. <b><br>
+_max_cached_memory</b> [in,g:] the maximum amount of memory
+(in KiB) at which images will be continued being added to
+the cache. Setting this to 0 (no limit) will lead to a crash
+(there is no protection currently). <b><br>
+_max_iterated_commands</b> [g:] the iteration limit for N in
+&quot;N[commandname]&quot; iterated command invocations.
+<b><br>
+_min_cached_images</b> [in,g:] the minimum number of images
+to keep from eviction; if less than four can lead to
+inefficiencies: e.g. when jumping between two images, each
+time an erase and a prefetch of neighboring images would
+trigger. default value is 4. <b><br>
+_no_default_configuration</b> [in,g:] if 0, a default,
+hardcoded configuration will be executed at startup, after
+the minimal hardcoded one. <b><br>
+_no_external_loader_programs</b> [in,g:] if 1, no external
+loading programs will be tried for piping in an unsupported
+type image file. <b><br>
+_no_rc_file</b> [in,g:] if 1, the ~/.fimrc file will not be
+loaded at startup. <b><br>
+_open_offset</b> [in,optional,g:,i:] offset (specified in
+bytes) used when opening a file; [out] i:_open_offset will
+be assigned to images opened at a nonzero offset. <b><br>
+_open_offset_retry</b> [in,optional,g:] number of adjacent
+bytes to probe in opening the file. <b><br>
+_orientation</b> [internal,i:] Orthogonal clockwise rotation
+(orientation) is controlled by:
+&rsquo;i:_orientation&rsquo;, &rsquo;g:_orientation&rsquo;
+and applied on a per-image basis. In particular, the
+values of the three variables are summed up and the sum is
+interpreted as the image orientation. If the sum is 0, no
+rotation will apply; if it is 1, a single ( 90&rsquo;)
+rotation will apply; if it is 2, a double (180&rsquo;)
+rotation will apply; if it is 3, a triple (270&rsquo;)
+rotation will apply. If the sum is not one of 0,1,2,3, the
+value of the sum modulo 4 is considered. Therefore,
+&quot;:i:_orientation=1&quot; and
+&quot;:i:_orientation=5&quot; are equivalent: they rotate
+the image one time by 90&rsquo;. <b><br>
+_preferred_rendering_dpi</b> [in,optional,g:] if &gt;0, pdf,
+ps, djvu rendering will use this value for a default
+document dpi (instead of a default value). <b><br>
+_preferred_rendering_width</b> [in,optional,g:] if &gt;0,
+bit based rendering will use this value for a default
+document width (instead of a default value). <b><br>
+_push_checks</b> [in,experimental,g:] if 1 (default), will
+check with stat() existence of input files before
+push&rsquo;ing them (set this to 0 to speed up loading very
+long file lists; in these cases a trailing slash (/) will
+have to be used to tell fim a pathname is a directory). This
+only works after initialization (thus, after command line
+files have been push&rsquo;ed); use
+--no-stat-push if you wish to set
+this to 0 at command line files specification. <b><br>
+_push_pushes_dirs</b> [in,g:] if 1, the push command will
+also accept and push directories (using pushdir). if 2, will
+also push hidden files/directories, that is, ones whose
+names begin with a dot (.). <b><br>
+_pushdir_re</b> [in] regular expression to match against
+when pushing files from a directory or an archive. By
+default this is &quot;.JPG$|.PNG$|.GIF$
+|.BMP$|.TIFF$|.TIF$|.JPEG$|.JFIF$|.PPM$|.PGM$|.PBM$|.PCX$&quot;.
+<b><br>
+_pwd</b> [out,g:] the current working directory; will be
+updated at startup and whenever the working directory
+changes. <b><br>
+_re_search_opts</b> [in,g:] affects regexp-based
+searches; if an empty string, defaults will apply; if
+contains &rsquo;i&rsquo; (&rsquo;I&rsquo;), case insensitive
+(sensitive) searches will occur; if contains
+&rsquo;b&rsquo;, will match on basename, if contains
+&rsquo;f&rsquo; on full pathname. <b><br>
+_reduce_factor</b> [in,g:] the image scale multiplier used
+when reducing images size. <b><br>
+_retry_loader_probe</b> [in,g:] if 1 and user specified a
+file loader and this fails, will probe for a different
+loader. <b><br>
+_rows</b> [in,g:] if &gt;0, will set the number of displayed
+text lines in the console. <b><br>
+_save_fim_history</b> [in,g:] if 1 on exit, will save the
+~/.fim_history file on exit. <b><br>
+_scale_factor_delta</b> [in,g:] value used for
+incrementing/decrementing the scaling factors. <b><br>
+_scale_factor_multiplier</b> [in,g:] value used for scaling
+up/down the scaling factors. <b><br>
+_scale_style</b> [in,g:] if non empty, this string will be
+fed to the scale command; see its documentation for possible
+values. <b><br>
+_screen_height</b> [out] the screen height. <b><br>
+_screen_width</b> [out,g:] the screen width. <b><br>
+_scroll_skip_page_fraction</b> [int,g:] if &gt;1, fraction
+of page which will be skipped in when scrolling (e.g.
+&rsquo;scrollforward&rsquo;); if 1, auto chosen; if &lt;1,
+disabled. <b><br>
+_seek_magic</b> [optional,g:] will seek a
+&rsquo;magic&rsquo; signature in the file after opening it,
+and will try decoding it starting within the range of that
+signature (use like this: fim -C
+&rsquo;_seek_magic=MAGIC_STRING;push filename&rsquo;).
+<b><br>
+_status_line</b> [in,g:] if 1, will display the status bar.
+<b><br>
+_steps</b> [in,g:] the default steps, in pixels, when
+panning images. <b><br>
+_sys_rc_file</b> [in,g:] string with the global
+configuration file name. <b><br>
+_use_exiftool</b> [in,g:] if &gt;0 and supported, exiftool
+will be used to get additional information. if 1, this will
+be appened to _comment; if 2, will go to _exiftool_comment.
+<b><br>
+_use_mipmaps</b> [in,g:] if &gt;0, will use mipmaps to speed
+up downscaling of images (this has a memory overhead
+equivalent to one image copy); mipmaps will not be cached.
+If 2, will use every fourth source pixel instead of
+averaging (good for photos, not for graphs). <b><br>
+_verbose_errors</b> [in,g:] if 1, will display on stdout
+internal errors, while parsing commands. <b><br>
+_verbose_keys</b> [in,g:] if 1, after each interactive mode
+key hit, the console will display the hit key raw keycode.
+<b><br>
+_verbosity</b> [in,experimental,g:] program verbosity.
+<b><br>
+_vsteps</b> [in,g:] the default steps, in pixels, when
+panning images vertically (overrides steps). <b><br>
+_want_autocenter</b> [in,g:] if 1, the image will be
+displayed centered. <b><br>
+_want_exif_orientation</b> [in,g:] if 1, will reorient
+images using information from EXIF metadata (and stored in
+in __exif_orientation, __exif_mirrored, __exif_flipped ).
+<b><br>
+_want_prefetch</b> [in,g:] if 1, will prefetch further files
+just after display of the first file; if 2 (and configured
+with --enable-cxx11) will load in the
+background. <b><br>
+_want_sleep_seconds</b> [in,g:] number of seconds of sleep
+during slideshow mode. <b><br>
+_want_wm_caption_status</b> [in,g:] this works only if
+supported by the display device (currently only SDL). if set
+to a number that is not 0, will show the status (or command)
+line in the window manager caption; if set to a
+non-empty string, will interpret it just as a file
+info format string (see _info_fmt_str); if empty, will show
+the program version. <b><br>
+_want_wm_mouse_ctrl</b> [in,g:] if at least 9 chars long,
+enable mouse click/movement behaviour when in SDL mode; the
+9 chars will correspond to a 3x3 screen clickable grid and
+the equivalent command keys; clicking middle or right button
+will toggle on-screen usage info. <b><br>
+angle</b> [in,out,i:] a floating point number specifying the
+rotation angle, in degrees. <b><br>
+ascale</b> [in,out,i:] the asymmetric scaling of the current
+image. <b><br>
+desaturated</b> [out,i:] 1, if the image is desaturated.
+<b><br>
+flipped</b> [out,i:] 1, if the image is flipped. <b><br>
+fresh</b> [in,out,i:,experimental] 1 if the image was
+loaded, before all autocommands (autocmd) execution. <b><br>
+height</b> [out,i:] the current image original height.
+<b><br>
+mirrored</b> [out,i:] 1, if the image is mirrored. <b><br>
+negated</b> [out,i:] 1, if the image is negated. <b><br>
+page</b> [out,experimental,g:] the current page. <b><br>
+pages</b> [out,experimental,i:] the current number of pages
+of an image. <b><br>
+random</b> [out] a pseudorandom number. <b><br>
+scale</b> [in,i:] the scale of the current image. <b><br>
+sheight</b> [out,i:] the current image scaled height.
+<b><br>
+swidth</b> [out,i:] the current image scaled width. <b><br>
+width</b> [out,i:] the current image original width.</p>
+
+<h2>COMMAND LINE USAGE EXAMPLES
+<a name="COMMAND LINE USAGE EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"># jump to the
+third image: <br>
+3; <br>
+# jump to first image: <br>
+^; <br>
+# jump to last image: <br>
+$; <br>
+# magnify the image two times: <br>
+*2; <br>
+# scale the image to the 30% of the original: <br>
+30%; <br>
+# scale the image up by 30%: <br>
++30%; <br>
+# scale the image down by 30%: <br>
+-30%; <br>
+# jump to the next image whose filename matches the
+&quot;.*jpg&quot; regular expression: <br>
+/.*jpg; <br>
+# executes the &quot;date&quot; system command <br>
+!&quot;date&quot;;</p>
+
+<h2>CONFIGURATION FILE EXAMPLE
+<a name="CONFIGURATION FILE EXAMPLE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This is the
+default configuration, as contained in the
+_fim_default_config_file_contents variable.</p>
+
+<p style="margin-left:11%; margin-top: 1em">#
+$LastChangedDate: 2018-01-21 17:19:31 +0100
+(Sun, 21 Jan 2018) $ <br>
+# Contents of the default &rsquo;fimrc&rsquo; file,
+hardcoded in the fim executable. <br>
+# Read the documentation (man fimrc) to discover how to
+change this default hardcoded file and how to make your own.
+<br>
+# Note that usually a ~/.fimrc file is read after these
+options take effect, so you could reset all of this with
+ease. <br>
+# Lines beginning with a pound (#) are ignored by fim (they
+are treated as comments). <br>
+# <br>
+# Internal variables. <br>
+# Some of these variables influence Fim&rsquo;s behaviour
+(input variables), some are set by Fim (output variables).
+<br>
+# It is wise the input variables are set at the beginning of
+the file, so the bottom may issue commands correctly
+affected by them. <br>
+
+if(_cache_control==&rsquo;&rsquo;){_cache_control=&rsquo;m&rsquo;;}
+<br>
+
+if(_debug_commands==&rsquo;&rsquo;){_debug_commands=&rsquo;&rsquo;;}
+<br>
+
+if(_command_expansion==&rsquo;&rsquo;){_command_expansion=1;}
+<br>
+if(_display_status==&rsquo;&rsquo;){_display_status=0;} <br>
+
+if(_max_cached_images==&rsquo;&rsquo;){_max_cached_images=5;}
+<br>
+
+if(_min_cached_images==&rsquo;&rsquo;){_min_cached_images=4;}
+<br>
+
+if(_max_cached_memory==&rsquo;&rsquo;){_max_cached_memory=81920;}
+<br>
+
+if(_max_iterated_commands==&rsquo;&rsquo;){_max_iterated_commands=100;}
+<br>
+if(_want_prefetch==&rsquo;&rsquo;){_want_prefetch=1;} <br>
+
+if(_no_external_loader_programs==&rsquo;&rsquo;){_no_external_loader_programs=0;}
+<br>
+
+if(_scale_style==&rsquo;&rsquo;){_scale_style=&rsquo;b&rsquo;;}
+<br>
+if(_save_fim_history==&rsquo;&rsquo;){_save_fim_history=1;}
+<br>
+if(_load_fim_history==&rsquo;&rsquo;){_load_fim_history=1;}
+<br>
+if(_verbose_keys==&rsquo;&rsquo;){_verbose_keys=0;} <br>
+if(_display_busy==&rsquo;&rsquo;){_display_busy=1;} <br>
+if(_ignorecase==&rsquo;&rsquo;){_ignorecase=1;} <br>
+
+if(_re_search_opts==&rsquo;&rsquo;){_re_search_opts=&rsquo;bi&rsquo;;}
+<br>
+if(_console_offset==&rsquo;&rsquo;){_console_offset=0;} <br>
+if(_console_key==&rsquo;&rsquo;){_console_key=58;} <br>
+
+if(_display_as_binary==&rsquo;&rsquo;){_display_as_binary=0;}
+<br>
+if(_push_checks==&rsquo;&rsquo;){_push_checks=1;} <br>
+
+#if(_want_wm_caption_status==&rsquo;&rsquo;){_want_wm_caption_status=0;}
+<br>
+
+if(_want_exif_orientation==&rsquo;&rsquo;){_want_exif_orientation=1;}
+<br>
+if(ascale==&rsquo;&rsquo;){ascale=&quot;1.0&quot;;} <br>
+if(_use_mipmaps==&rsquo;&rsquo;){_use_mipmaps=1;} <br>
+
+if(_downscale_huge_at_load==&rsquo;&rsquo;){_downscale_huge_at_load=1;}
+<br>
+
+if(_scroll_skip_page_fraction==&rsquo;&rsquo;){_scroll_skip_page_fraction=0;}
+<br>
+
+if(_want_wm_mouse_ctrl==&rsquo;&rsquo;){_want_wm_mouse_ctrl=&quot;&rsquo;pP+a-=nN&quot;;}
+<br>
+# <br>
+# External variables (not used internally). <br>
+
+if(allow_round_scroll==&rsquo;&rsquo;){allow_round_scroll=0;}
+<br>
+if(console_scroll_n==&rsquo;&rsquo;){console_scroll_n=3;}
+<br>
+# <br>
+alias &quot;toggleautoflip&quot;
+&quot;_autoflip=1-_autoflip&quot; &quot;&quot;; <br>
+alias &quot;toggleautonegate&quot;
+&quot;_autonegate=1-_autonegate&quot; &quot;&quot;;
+<br>
+alias &quot;toggleflip&quot;
+&quot;i:flipped=1-i:flipped&quot; &quot;toggles
+flipped property on the current image&quot;; <br>
+alias &quot;flip&quot; &quot;toggleflip;redisplay&quot;
+&quot;flip the current image along the horizontal
+axis&quot;; <br>
+alias &quot;fliponce&quot; &quot;flip;toggleflip&quot;
+&quot;flip, but just for one display&quot;; <br>
+alias &quot;toggleautomirror&quot;
+&quot;_automirror=1-_automirror&quot; &quot;&quot;;
+<br>
+alias &quot;togglemirror&quot;
+&quot;i:mirrored=1-i:mirrored&quot; &quot;toggles
+mirrored property on the current image&quot;; <br>
+alias &quot;mirror&quot; &quot;togglemirror;redisplay&quot;
+&quot;mirror the image along the vertical axis&quot;
+&quot;&quot;; <br>
+alias &quot;mirroronce&quot; &quot;mirror;togglemirror&quot;
+&quot;mirror, but just for one display&quot;; <br>
+alias &rsquo;toggleLimitMarked&rsquo;
+&rsquo;__pre_limit_fileindex=_fileindex;_limit_mode=1-_limit_mode;
+if(_limit_mode==1){limit &quot;!&quot;;} else { limit; }
+if(_filelistlen&lt;1){_limit_mode=0;limit;goto
+__pre_limit_fileindex;} i:fresh=1;redisplay; &rsquo;
+&quot;toggle between limiting file list to the marked files
+and the full list&quot;; <br>
+alias &quot;unlimit&quot; &quot;limit&quot; &quot;calling
+limit with no arguments restores the original list&quot;;
+<br>
+# Warning : binding to C-s, C-z and C-c
+won&rsquo;t make effect, as these <br>
+# codes are get caught by the console driver and will have
+no effect in fim. <br>
+# Moreover, C-z will crash fim and C-c will
+terminate it. <br>
+# Some other combinations (e.g.:C-l) may have similar
+problems in your console. <br>
+bind &rsquo;f&rsquo; &quot;flip&quot;; <br>
+bind &rsquo;F&rsquo; &quot;fliponce&quot;; <br>
+bind &rsquo;m&rsquo; &quot;mirror&quot;; <br>
+bind &rsquo;M&rsquo; &quot;mirroronce&quot;; <br>
+bind &rsquo;q&rsquo; &quot;quit&quot;; <br>
+bind &rsquo;Esc&rsquo; &quot;quit&quot;; <br>
+#bind &rsquo;n&rsquo; &quot;next_file&quot;; <br>
+#bind &rsquo;n&rsquo; &quot;next&quot;; <br>
+bind &rsquo;C-h&rsquo; &quot;help&quot;; <br>
+#bind &rsquo;?&rsquo; &quot;help&quot;; # assigned to
+back-search <br>
+#bind &rsquo;/&rsquo; &quot;help&quot;; # assigned to
+forward-search <br>
+bind &rsquo;=&rsquo; &quot;scale &rsquo;100%&rsquo;&quot;;
+<br>
+#bind &rsquo;p&rsquo; &quot;prev_file&quot;; <br>
+bind &rsquo;Del&rsquo; &quot;list
+&rsquo;pop&rsquo;;reload&quot;; <br>
+#bind &rsquo;s&rsquo; &quot;list &rsquo;sort&rsquo;&quot;;
+<br>
+bind &rsquo; &rsquo; &quot;scroll
+&rsquo;forward&rsquo;&quot;; <br>
+bind &rsquo;S&rsquo; &quot;toggleDisplayStatus&quot;; <br>
+bind &rsquo;I&rsquo; &quot;toggleautonegate&quot;; <br>
+bind &rsquo;i&rsquo; &quot;color
+&rsquo;negate&rsquo;;redisplay&quot;; <br>
+bind &rsquo;g&rsquo; &quot;color
+&rsquo;desaturate&rsquo;;redisplay&quot;; <br>
+bind &rsquo;[&rsquo; &rsquo;font_reduce;redisplay&rsquo;;
+<br>
+bind &rsquo;]&rsquo; &rsquo;font_magnify;redisplay&rsquo;;
+<br>
+bind &rsquo;|&rsquo;
+&rsquo;toggle_font_auto_scale;redisplay&rsquo;; <br>
+bind &rsquo;{&rsquo; &rsquo;font
+&quot;prev&quot;;redisplay&rsquo;; <br>
+bind &rsquo;}&rsquo; &rsquo;font
+&quot;next&quot;;redisplay&rsquo;; <br>
+bind &rsquo;G&rsquo; &quot;toggleDesaturate&quot;; <br>
+bind &rsquo;r&rsquo; &quot;rotate90&quot;; <br>
+bind &rsquo;R&rsquo; &quot;rotate270&quot;; <br>
+bind &rsquo;+&rsquo; &quot;magnify&quot;; <br>
+bind &rsquo;a&rsquo; &quot;scale &rsquo;a&rsquo;&quot;; <br>
+bind &rsquo;H&rsquo; &quot;scale &rsquo;H&rsquo;&quot;; <br>
+bind &rsquo;Tab&rsquo; &quot;toggleVerbosity&quot;; <br>
+bind &rsquo;Menu&rsquo; &quot;toggleVerbosity&quot;; <br>
+bind &rsquo;v&rsquo; &quot;toggleDisplayStatus&quot;; <br>
+bind &rsquo;A&rsquo; &quot;A&quot;; <br>
+bind &rsquo;C-m&rsquo; &quot;list
+&rsquo;mark&rsquo;&quot;; <br>
+bind &rsquo;u&rsquo; &quot;list &rsquo;unmark&rsquo;&quot;;
+<br>
+bind &rsquo;Enter&rsquo; &quot;list &rsquo;mark&rsquo;;goto
+_lastgotodirection&quot;; <br>
+bind &rsquo;-&rsquo; &quot;reduce&quot;; <br>
+bind &quot;Up&quot; &quot;pan_up&quot;; <br>
+bind &rsquo;k&rsquo; &quot;pan_up&quot;; <br>
+bind &quot;Right&quot; &quot;pan_right&quot;; <br>
+bind &rsquo;l&rsquo; &quot;pan_right&quot;; <br>
+bind &quot;Down&quot; &quot;pan_down&quot;; <br>
+bind &rsquo;j&rsquo; &quot;pan_down&quot;; <br>
+bind &quot;Left&quot; &quot;pan_left&quot;; <br>
+bind &rsquo;h&rsquo; &quot;pan_left&quot;; <br>
+bind &rsquo;t&rsquo; &quot;align &rsquo;top&rsquo;&quot;;
+<br>
+bind &rsquo;C-g&rsquo; &quot;system &rsquo;fbgrab
+fim.png&rsquo;&quot;; <br>
+#bind &rsquo;C-r&rsquo; &quot;recording
+&rsquo;start&rsquo;&quot;; <br>
+bind &rsquo;C-r&rsquo; &quot;reload
+&rsquo;&rsquo;&quot;; <br>
+bind &rsquo;Q&rsquo; &quot;recording
+&rsquo;stop&rsquo;&quot;; <br>
+bind &rsquo;D&rsquo; &quot;recording
+&rsquo;dump&rsquo;&quot;; <br>
+bind &rsquo;E&rsquo; &quot;recording
+&rsquo;execute&rsquo;&quot;; <br>
+bind &rsquo;C-e&rsquo; &quot;recording
+&rsquo;execute&rsquo;&quot;; <br>
+bind &rsquo;C-x&rsquo; &quot;recording
+&rsquo;execute&rsquo;&quot;; <br>
+bind &rsquo;.&rsquo; &quot;recording
+&rsquo;repeat_last&rsquo;&quot;; <br>
+bind &rsquo;&rsquo;&rsquo; &quot;toggleLimitMarked&quot;;
+<br>
+alias &quot;toggleVerbosity&quot;
+&quot;_display_console=1-_display_console;i:fresh=1;redisplay&quot;
+&quot;&quot;; <br>
+alias &quot;toggleKeyVerbosity&quot;
+&quot;_verbose_keys=1-_verbose_keys;redisplay&quot;
+&quot;&quot;; <br>
+alias &quot;toggleDesaturate&quot;
+&quot;_autodesaturate=1-_autodesaturate;redisplay&quot;
+&quot;&quot;; <br>
+alias &quot;idempotent_cmd&quot; &quot;goto
+&rsquo;+0p&rsquo;&quot;; <br>
+# <br>
+# Autocommands examples: <br>
+#autocmd &quot;PostInteractiveCommand&quot;
+&quot;fim.png&quot; &quot;echo &rsquo;\nmatched an
+interactive command on fim.png\n&rsquo;&quot;; <br>
+#autocmd &quot;PostDisplay&quot; &quot;.*png&quot;
+&quot;echo &rsquo;this is a png file&rsquo;&quot;; <br>
+#autocmd &quot;PostDisplay&quot; &quot;.*jpg&quot;
+&quot;echo &rsquo;this is a jpg file&rsquo;&quot;; <br>
+#autocmd &quot;PostDisplay&quot; &quot;&quot; &quot;echo
+&rsquo;\nthis is a file\n&rsquo;&quot;; <br>
+#autocmd &quot;PostGoto&quot; &quot;&quot;
+&quot;set_interactive_mode&quot;; <br>
+autocmd &quot;PostGoto&quot; &quot;&quot;
+&quot;reload&quot;; <br>
+autocmd &quot;PostWindow&quot; &quot;&quot;
+&quot;display&quot;; <br>
+autocmd &quot;PreRedisplay&quot; &quot;&quot;
+&quot;i:_will_display=1&quot;; <br>
+autocmd &quot;PreRedisplay&quot; &quot;&quot;
+&quot;if(_scale_style!=&rsquo;&rsquo; &amp;&amp;
+i:fresh){i:fresh=0;scale _scale_style ;i:fresh=0;}&quot;;
+<br>
+autocmd &quot;PostRedisplay&quot; &quot;&quot;
+&quot;i:_will_display=0&quot;; <br>
+# Display device specific config <br>
+alias &quot;aalib_fix_do&quot;
+&quot;{if(aascale==&rsquo;&rsquo;){ascale=&rsquo;2.0&rsquo;;}else{ascale=aascale;}
+i:fresh=1;display;if(_TERM=~&rsquo;screen&rsquo;){echo
+&rsquo;screen+aalib?expect binding problems!&rsquo;}}&quot;
+&quot;See aalib_fix.&quot;; <br>
+alias &quot;aalib_fix&quot;
+&quot;if(_device_string==&rsquo;aa&rsquo;){aalib_fix_do;scale
+&rsquo;a&rsquo;;}&quot; &quot;When using the aalib (ASCII
+art) library we face a problem: glyph proportions are seldom
+square (as pixels are), and are tricky to detect; for this
+reason, we need to reshape the image with respect to the
+font ratio, but we have to make a guess in the scaling
+factor to compensate. If at runtime a better value is known
+for the terminal font height/with ratio, it may be fed in
+the &rsquo;aascale&rsquo; variable for an accurate
+scaling.&quot;; <br>
+autocmd &quot;PostReload&quot; &quot;&quot;
+&quot;aalib_fix&quot;; <br>
+autocmd &quot;PostLoad&quot; &quot;&quot;
+&quot;aalib_fix&quot;; <br>
+alias &quot;refresh&quot; &quot;desc
+&rsquo;reload&rsquo;;redisplay;&quot; &quot;reloads and
+displays image description&quot;; <br>
+bind &quot;F5&quot; &quot;refresh&quot;; <br>
+bind &quot;F11&quot;
+&quot;if(_device_string==&rsquo;sdl&rsquo; &amp;&amp;
+!_fullscreen){_old_sw=_screen_width;_old_sh=_screen_height;display
+&rsquo;reinit&rsquo; &rsquo;mW0:0&rsquo;;_fullscreen=1;}else
+if(_device_string==&rsquo;sdl&rsquo; &amp;&amp;
+_old_sw*_old_sh*_fullscreen){display &rsquo;reinit&rsquo;
+&rsquo;rwm&rsquo;._old_sw.&rsquo;:&rsquo;._old_sh;_fullscreen=0;}&quot;
+&quot;Toggles full screen. Will show mouse cursor in full
+screen.&quot;;</p>
+
+<p style="margin-left:11%; margin-top: 1em">autocmd
+&quot;PostReload&quot; &quot;&quot; &quot;i:fresh=1&quot; ;
+<br>
+autocmd &quot;PostScale&quot; &quot;&quot;
+&quot;if(0==i:_will_display){i:fresh=1;display;}&quot; ;
+<br>
+autocmd &quot;PostPan&quot; &quot;&quot;
+&quot;{i:fresh=1;display;}&quot; ; <br>
+autocmd &quot;PostReload&quot; &quot;&quot;
+&quot;if(i:fresh){redisplay;}&quot;; <br>
+autocmd &quot;PostInteractiveCommand&quot; &quot;&quot;
+&quot;if(i:fresh){display;i:fresh=0;}&quot;; <br>
+autocmd &quot;PostInteractiveCommand&quot; &quot;&quot;
+&quot;if(_want_prefetch){prefetch;}&quot;; <br>
+autocmd &quot;PostInteractiveCommand&quot; &quot;&quot;
+&quot;if(_display_console==0 &amp;&amp;
+i:fresh){redisplay;i:fresh=0;}&quot;; <br>
+autocmd &quot;PostInteractiveCommand&quot; &quot;&quot;
+&quot;idempotent_cmd&quot;; # Bug workaround: without it
+console scroll is broken.</p>
+
+<p style="margin-left:11%; margin-top: 1em">alias
+&quot;next10&quot;
+&quot;i=0;while(i&lt;10){i=i+1;next;display;sleep
+&rsquo;1&rsquo;;}&quot; &quot;goes forward 10 images&quot;;
+<br>
+alias &quot;prev10&quot;
+&quot;i=0;while(i&lt;10){i=i+1;prev;display;sleep
+&rsquo;1&rsquo;;}&quot; &quot;goes backward 10 images&quot;;
+<br>
+bind &rsquo;N&rsquo; &rsquo;next10&rsquo;; <br>
+bind &rsquo;P&rsquo; &rsquo;prev10&rsquo;; <br>
+bind &rsquo;C-n&rsquo; &quot;goto
+&rsquo;+//&rsquo;&quot;; <br>
+bind &rsquo;C-p&rsquo; &quot;goto
+&rsquo;-//&rsquo;&quot;; <br>
+bind &rsquo;C-b&rsquo; &quot;goto
+&rsquo;-//&rsquo;&quot;; # Warning: many
+configurations cannot detect C-b. <br>
+bind &rsquo;W&rsquo; &quot;display
+&rsquo;resize&rsquo;&quot; &quot;if supported, resizes the
+window to match the current image pixels size&quot;; <br>
+#bind &rsquo;C-w&rsquo; &quot;scale
+&rsquo;100%&rsquo;;display &rsquo;resize&rsquo;&quot;
+&quot;if supported, scales the image to 100% and resizes the
+window to match its size (if fits)&quot;; <br>
+bind &rsquo;C-w&rsquo;
+&quot;if(_scale_style!=&rsquo;w&rsquo;){_scale_style=&rsquo;w&rsquo;;scale
+&rsquo;w&rsquo;;}else{_scale_style=&rsquo;&rsquo;;scale
+&rsquo;100%&rsquo;;}&quot; &quot;scale to width&quot;; <br>
+alias &quot;endless_slideshow&quot;
+&quot;while(1){display;sleep &rsquo;1&rsquo;;next;}&quot;
+&quot;performs an automated slideshow, endlessly&quot;; <br>
+alias &quot;bookview&quot; &quot;while(1){display;sleep
+&rsquo;2&rsquo;;scroll &rsquo;down&rsquo;;}&quot;
+&quot;&quot;; <br>
+alias &quot;comicview&quot; &quot;while(1){display;sleep
+&rsquo;1&rsquo;;scroll &rsquo;down&rsquo;;}&quot;
+&quot;&quot;; <br>
+alias &quot;read&quot; &quot;while(1){display;sleep
+&rsquo;1&rsquo;;scroll &rsquo;forward&rsquo;;}&quot;
+&quot;&quot;; <br>
+alias &quot;slowread&quot; &quot;while(1){display;sleep
+&rsquo;2&rsquo;;scroll &rsquo;forward&rsquo;;}&quot;
+&quot;&quot;; <br>
+alias &quot;fastread&quot; &quot;while(1){display;scroll
+&rsquo;forward&rsquo;;}&quot; &quot;proceeds like in a book
+bug very fast&quot;; <br>
+alias &quot;pornview&quot; &quot;echo &rsquo;press any key
+repeatedly to terminate&rsquo; ;endless_slideshow&quot;
+&quot;enters an endless slideshow&quot;; <br>
+autocmd &quot;PreExecutionCycle&quot;
+&quot;/fbps-&quot;
+&quot;_display_busy=0;_display_status=0&quot; ; <br>
+autocmd &quot;PreExecutionCycle&quot; &quot;&quot;
+&quot;i:fresh=1;reload&quot;; <br>
+autocmd &quot;PreExecutionCycle&quot;
+&quot;/fbps-.*ps001.png&quot;
+&quot;i:fresh=1;redisplay&quot;; <br>
+## Example in imposing a file loader to an extension: <br>
+#autocmd &quot;PreReload&quot; &quot;.*mtx.gz&quot;
+&quot;_file_loader=&rsquo;MatrixMarket&rsquo;&quot;; <br>
+#autocmd &quot;PostReload&quot; &quot;.*mtx.gz&quot;
+&quot;_file_loader=&rsquo;&rsquo;&quot;; <br>
+bind &rsquo;*&rsquo;
+&quot;_display_console=0;toggleVerbosity;echo i:*&quot;;
+<br>
+bind &rsquo;w&rsquo; &quot;scale &rsquo;w&rsquo;&quot;; <br>
+bind &rsquo;&lt;&rsquo; &quot;rotate10_ccw;display&quot;;
+<br>
+bind &rsquo;&gt;&rsquo; &quot;rotate10;display&quot;; <br>
+bind &rsquo;_&rsquo; &quot;_scale_style=&rsquo;&rsquo;;scale
+&rsquo;100%&rsquo;&quot;; <br>
+bind &rsquo;,&rsquo; &quot;_display_console=1;echo
+_last_system_output&quot;; <br>
+bind &rsquo;C-a&rsquo;
+&quot;if(_scale_style!=&rsquo;a&rsquo;){_scale_style=&rsquo;a&rsquo;;scale
+&rsquo;a&rsquo;;}else{_scale_style=&rsquo;&rsquo;;scale
+&rsquo;100%&rsquo;;}&quot; &quot;scale to height&quot;; <br>
+# <br>
+alias &quot;pan_nw&quot; &quot;pan &rsquo;nw&rsquo;&quot;
+&quot;pans the image to the upper left&quot;; <br>
+alias &quot;pan_ne&quot; &quot;pan &rsquo;ne&rsquo;&quot;
+&quot;pans the image to the upper right&quot;; <br>
+alias &quot;pan_se&quot; &quot;pan &rsquo;se&rsquo;&quot;
+&quot;pans the image to the lower left&quot;; <br>
+alias &quot;pan_sw&quot; &quot;pan &rsquo;sw&rsquo;&quot;
+&quot;pans the image to the lower right&quot;; <br>
+alias &quot;pan_down&quot; &quot;if(_display_console==0){pan
+&rsquo;down&rsquo;;}else{scd;}&quot; &quot;pans the image
+down / scrolls console down&quot;; <br>
+alias &quot;pan_up&quot; &quot;if(_display_console==0){pan
+&rsquo;up&rsquo; ;}else{scu;}&quot; &quot;pans the image up
+/ scrolls console up&quot;; <br>
+alias &quot;pan_left&quot; &quot;pan
+&rsquo;left&rsquo;&quot; &quot;pans the image left&quot;;
+<br>
+alias &quot;pan_right&quot; &quot;pan
+&rsquo;right&rsquo;&quot; &quot;pans the image right&quot;;
+<br>
+alias &quot;diagonal_nw&quot; &quot;pan_nw&quot; &quot;pans
+the image to the upper left&quot;; <br>
+alias &quot;diagonal_ne&quot; &quot;pan_ne&quot; &quot;pans
+the image to the upper right&quot;; <br>
+alias &quot;diagonal_se&quot; &quot;pan_se&quot; &quot;pans
+the image to the lower left&quot;; <br>
+alias &quot;diagonal_sw&quot; &quot;pan_sw&quot; &quot;pans
+the image to the lower right&quot;; <br>
+bind &rsquo;d&rsquo; &quot;diagonal_nw&quot;; <br>
+bind &rsquo;D&rsquo; &quot;diagonal_se&quot;; <br>
+bind &rsquo;x&rsquo; &quot;diagonal_ne&quot;; <br>
+bind &rsquo;X&rsquo; &quot;diagonal_sw&quot;; <br>
+alias &quot;toggleDisplayStatus&quot;
+&quot;_display_status=1-_display_status;redisplay&quot;
+&quot;&quot;; <br>
+alias &quot;toggleDisplayBusy&quot;
+&quot;_display_busy=1-_display_busy&quot;
+&quot;&quot;; <br>
+alias &quot;sort&quot; &quot;list &rsquo;sort&rsquo;&quot;
+&quot;sorts the files list ordered&quot;; <br>
+bind &rsquo;o&rsquo; &quot;sort&quot;; <br>
+bind &rsquo;b&rsquo; &quot;prev&quot;; <br>
+bind &rsquo;B&rsquo; &quot;toggleDisplayBusy&quot;; <br>
+alias &quot;random_slideshow&quot; &quot;while(1){goto
+random;}&quot; &quot;performs a shuffled slideshow&quot;;
+<br>
+alias &quot;rotate90_ccw&quot;
+&quot;i:_orientation=i:_orientation+3;i:fresh=1;i:fresh=1;redisplay&quot;
+&quot;rotate 90 degrees counter clockwise&quot;; <br>
+alias &quot;rotate90_cw&quot;
+&quot;i:_orientation=i:_orientation+1;i:fresh=1;i:fresh=1;redisplay&quot;
+&quot;rotate 90 degrees clockwise&quot;; <br>
+alias &quot;rotate180&quot;
+&quot;i:_orientation=i:_orientation+2;i:fresh=1;i:fresh=1;redisplay&quot;
+&quot;rotate 180 degrees&quot;; <br>
+alias &quot;rotate90&quot; &quot;rotate90_cw;display&quot;
+&quot;rotate 90 degrees clockwise&quot;; <br>
+alias &quot;rotate270&quot; &quot;rotate90_ccw;display&quot;
+&quot;rotate 90 degrees counter clockwise&quot;; <br>
+alias &quot;rotate10&quot; &quot;rotate
+&rsquo;10&rsquo;;display&quot; &quot;rotate 10 degrees
+counter clockwise&quot;; <br>
+alias &quot;rotate10_ccw&quot; &quot;rotate -10
+;display&quot; &quot;rotate 10 degrees clockwise&quot;;</p>
+
+<p style="margin-left:11%; margin-top: 1em">bind
+&rsquo;K&rsquo; &rsquo;if(_display_console==0){echo
+i:_filename.&quot;:
+&quot;.i:_comment;toggleVerbosity}else{toggleVerbosity;}&rsquo;;</p>
+
+<p style="margin-left:11%; margin-top: 1em">alias
+&rsquo;cache&rsquo; &rsquo;echo _cache_status&rsquo;
+&quot;displays cached images status&quot;; <br>
+bind &rsquo;c&rsquo; &rsquo;align &quot;center&quot;&rsquo;;
+<br>
+alias &rsquo;widen&rsquo;
+&rsquo;i:ascale=i:ascale*&quot;1.1&quot;;*1.0&rsquo;
+&quot;widen the current image&quot;; <br>
+alias &rsquo;narrow&rsquo;
+&rsquo;i:ascale=i:ascale/&quot;1.1&quot;;*1.0&rsquo;
+&quot;narrow the current image&quot;; <br>
+bind &rsquo;y&rsquo; &quot;widen&quot; &quot;widen
+horizontally the image&quot;; <br>
+bind &rsquo;Y&rsquo; &quot;narrow&quot; &quot;shrink
+horizontally the image&quot;; <br>
+alias &rsquo;console_scroll_up&rsquo;
+&rsquo;if(_console_offset&lt;_console_lines+console_scroll_n-_rows){_console_offset=_console_offset+console_scroll_n;}&rsquo;
+&quot;scrolls up the virtual console&quot;; <br>
+alias &rsquo;console_scroll_down&rsquo;
+&rsquo;if(allow_round_scroll ||
+(_console_offset&gt;=console_scroll_n)){_console_offset=_console_offset-console_scroll_n;}&rsquo;
+&quot;scrolls down the virtual console&quot;; <br>
+alias &rsquo;console_scroll_reset&rsquo;
+&rsquo;{_console_offset=0;}&rsquo;; <br>
+alias &rsquo;scu&rsquo; &rsquo;console_scroll_up&rsquo;
+&quot;&quot;; <br>
+alias &rsquo;scd&rsquo; &rsquo;console_scroll_down&rsquo;
+&quot;&quot;; <br>
+alias &rsquo;scz&rsquo; &rsquo;console_scroll_reset&rsquo;
+&quot;&quot;; <br>
+alias &rsquo;center&rsquo; &rsquo;align
+&quot;center&quot;&rsquo;; <br>
+alias &rsquo;left&rsquo; &rsquo;align
+&quot;left&quot;&rsquo;; <br>
+alias &rsquo;right&rsquo; &rsquo;align
+&quot;right&quot;&rsquo;; <br>
+alias &rsquo;top&rsquo; &rsquo;align &quot;top&quot;&rsquo;;
+<br>
+alias &rsquo;bottom&rsquo; &rsquo;align
+&quot;bottom&quot;&rsquo;; <br>
+alias &quot;font_magnify_auto&quot;
+&quot;if(_fbfont_as_screen_fraction&gt;1){_fbfont_as_screen_fraction=_fbfont_as_screen_fraction-1;}else{_fbfont_as_screen_fraction=_screen_width/100+_screen_height/100;}&quot;
+&quot;&quot;; <br>
+alias &quot;font_magnify_manual&quot;
+&quot;_fbfont_magnify_factor=_fbfont_magnify_factor+1&quot;
+&quot;&quot;; <br>
+alias &quot;font_reduce_auto&quot;
+&quot;if(_fbfont_as_screen_fraction&gt;1){_fbfont_as_screen_fraction=_fbfont_as_screen_fraction+1;}&quot;
+&quot;&quot;; <br>
+alias &quot;font_reduce_manual&quot;
+&quot;_fbfont_magnify_factor=_fbfont_magnify_factor-1&quot;
+&quot;&quot;; <br>
+alias &quot;toggle_font_auto_scale&quot;
+&quot;if(_fbfont_as_screen_fraction&lt;0){_fbfont_as_screen_fraction=0;echo
+&rsquo;Auto font scaling
+on.&rsquo;;}else{_fbfont_as_screen_fraction=-1;echo
+&rsquo;Auto font scaling off.&rsquo;;}&quot; &quot;toggles
+between manual and auto font scaling control&quot;; <br>
+alias &rsquo;next_file_dir_same&rsquo; &quot;goto
+&rsquo;+/s&rsquo;;&quot; &quot;go to next file in same
+dir&quot;; <br>
+alias &rsquo;next_file_dir_other&rsquo; &quot;goto
+&rsquo;+/S&rsquo;;&quot; &quot;go to next file in other
+dir&quot;; <br>
+alias &rsquo;next_file_dir_up&rsquo; &quot;goto
+&rsquo;+/u&rsquo;;&quot; &quot;go to next file up the dir
+hierarchy&quot;; <br>
+alias &rsquo;next_file_dir_down&rsquo; &quot;goto
+&rsquo;+/d&rsquo;;&quot; &quot;go to next file down the dir
+hierarchy&quot;; <br>
+alias &rsquo;next_file_same_basename&rsquo; &quot;goto
+&rsquo;+/b&rsquo;;&quot; &quot;go to next file with same
+basename&quot;; <br>
+alias &rsquo;prev_file_dir_same&rsquo; &quot;goto
+&rsquo;-/s&rsquo;;&quot; &quot;go to prev file in same
+dir&quot;; <br>
+alias &rsquo;prev_file_dir_other&rsquo; &quot;goto
+&rsquo;-/S&rsquo;;&quot; &quot;go to prev file in
+other dir&quot;; <br>
+alias &rsquo;prev_file_dir_up&rsquo; &quot;goto
+&rsquo;-/u&rsquo;;&quot; &quot;go to prev file up the
+dir hierarchy&quot;; <br>
+alias &rsquo;prev_file_dir_down&rsquo; &quot;goto
+&rsquo;-/d&rsquo;;&quot; &quot;go to prev file down
+the dir hierarchy&quot;; <br>
+alias &rsquo;prev_file_same_basename&rsquo; &quot;goto
+&rsquo;-/b&rsquo;;&quot; &quot;go to prev file with
+same basename&quot;; <br>
+#alias &quot;font_magnify&quot;
+&quot;if(_fbfont_as_screen_fraction&lt;0)
+{font_magnify_manual;}else{font_magnify_auto;}&quot;
+&quot;increase font size (either relative or
+absolute)&quot;; <br>
+#alias &quot;font_reduce&quot;
+&quot;if(_fbfont_as_screen_fraction&lt;0)
+{font_reduce_manual;} else{font_reduce_auto;}&quot;
+&quot;increase font size (either relative or
+absolute)&quot;; <br>
+alias &quot;font_magnify&quot;
+&quot;_fbfont_as_screen_fraction=-1;font_magnify_manual&quot;
+&quot;increase absolute font size and set manual font
+control&quot;; <br>
+alias &quot;font_reduce&quot;
+&quot;_fbfont_as_screen_fraction=-1;font_reduce_manual&quot;
+&quot;decrease absolute font size and set manual font
+control&quot;; <br>
+bind &quot;PageUp&quot;
+&quot;if(_display_console==0){prev;}else{scu;}&quot;; <br>
+bind &quot;PageDown&quot;
+&quot;if(_display_console==0){next;}else{scd;}&quot;; <br>
+bind &quot;Home&quot; &quot;0;&quot;; <br>
+bind &quot;End&quot; &quot;$;&quot;; <br>
+bind &quot;^&quot; &quot;0;&quot;; <br>
+bind &quot;$&quot; &quot;$;&quot;; <br>
+#bind &quot;Backspace&quot; &quot;prev&quot;; # console code
+for C-h and Backspace is the same :-) <br>
+bind &quot;&rsquo;&quot; &quot;goto _lastfileindex&quot;;
+<br>
+bind &rsquo;(&rsquo; &quot;goto &rsquo;^p&rsquo;&quot;; <br>
+bind &rsquo;)&rsquo; &quot;goto &rsquo;$p&rsquo;&quot;; <br>
+_display_status=1; # lower status line <br>
+_want_wm_caption_status=&quot;fim:%N@%p%%%L[%i/%l]&quot;;
+<br>
+_info_fmt_str=&quot;%p%% %wx%h%L %i/%l%P %F %T %c&quot;; #
+lower right line part <br>
+#_display_status_fmt=&quot;%N:%k&quot;; # <br>
+
+_display_status_fmt=&quot;%N%?EXIF_DateTimeOriginal?[%:EXIF_DateTimeOriginal:]?%?EXIF_ExposureTime?[%:EXIF_ExposureTime:]?%?EXIF_FNumber?[%:EXIF_FNumber:]?%?EXIF_ApertureValue?[%:EXIF_ApertureValue:]?%?EXIF_ISOSpeedRatings?[ISO%:EXIF_ISOSpeedRatings:]?:%k&quot;;
+# lower left line part <br>
+#_fbfont_as_screen_fraction=-1; # disable auto font
+scaling <br>
+echo &quot;WELCOME: to switch to the command line interface
+press &rsquo;:&rsquo;&quot;; <br>
+# More examples: <br>
+#alias &quot;plisten&quot; &rsquo;popen &quot;nc -l
+-p 9999 &quot;&rsquo; &quot;executes fim commands
+coming from port 9999 on this computer&quot;; <br>
+#alias &quot;wlisten&quot;
+&quot;while(1){sleep;plisten;}&quot; &quot;listen to a pipe,
+endlessly&quot;; <br>
+#alias &quot;musicplay&quot; &quot;system &rsquo;mpc
+play&rsquo;&quot; &quot;&quot;; <br>
+#alias &quot;musicpause&quot; &quot;system &rsquo;mpc
+pause&rsquo;&quot; &quot;&quot;; <br>
+#alias &quot;rdjpgcom&quot; &rsquo;system
+&quot;rdjpgcom&quot; i:_filename&rsquo;; <br>
+# offsetscan usage : need a mechanism for popping all images
+before. <br>
+#alias &quot;offsetscan&quot; &quot;while(i:width&lt;1){list
+&rsquo;push&rsquo; &rsquo;blob.jpg&rsquo;;stdout
+_open_offset ;_open_offset=_open_offset+1;reload;}&quot;;
+<br>
+#alias &quot;webcam&quot; &quot;pread &rsquo;vgrabbj
+-d /dev/video0&rsquo;&quot;; <br>
+#alias &quot;webcam_cycle&quot;
+&quot;while(1){webcam;reload;sleep 1;}&quot;; <br>
+# This is a FIM initialization file. <br>
+# Without it FIM cannot work like it should. <br>
+# Feel free to modify it, but with caution!</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page could be improved. Certain side effects of commands are
+not documented. Neither a formal description of the various
+commands. Interaction of commands and variables is also not
+completely documented.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The <b>fim</b>
+language shall be more liberal with quoting.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>fim</i>(1),
+<i>fimgs</i>(1), <i>regex</i>(1).</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Michele Martone
+&lt;dezperado _CUT_ autistici _CUT_ org&gt;</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">See copyright
+notice in <i>fim</i>(1).</p>
+<hr>
+</body>
+</html>

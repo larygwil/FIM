@@ -1,0 +1,16 @@
+# A test for the console.
+alias "console_refresh" "toggleVerbosity; scu; scd; scz; toggleVerbosity;";
+alias "console_out" "stdout _console_buffer_total; stdout _console_buffer_free; stdout _console_buffer_use;";
+#
+console_refresh;
+cout "1";
+console_out;
+#
+console_refresh;
+cout "2";
+console_out;
+#
+console_refresh;
+cout "3";
+console_out;
+#

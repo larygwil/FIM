@@ -1,0 +1,11 @@
+this test will break if user configuration breaks in.
+so it is temporary :)
+#executing: echo 'ciao'
+#executing: goto '+1'
+#executing: reload 
+#executing: redisplay 
+#executing: scale 'b'
+#executing: reload 
+#executing: redisplay 
+#executing: scale 'b'
+#executing: quit 

@@ -1,0 +1,68 @@
+# List push/remove test.
+# This file is part of the fim test suite.
+# This test will fail on missing gif support.
+#autocmd "PreReload"   ".*txt" "_file_loader='Text'";
+#autocmd "PostReload"   ".*txt" "_file_loader=''";
+stdout "List/limit test: BEGIN.";
+cd "../../media/numbers";
+#list "push" "1.txt" "2.txt" "3.txt" "4.txt" "5.txt" "6.txt" "7.txt" "8.txt" "9.txt" ;
+list;
+if( _last_cmd_output != "../..//media/image.jpg ../..//media/fim.png ../..//media/image.png " ) stdout "wrong first list: "._last_cmd_output; else stdout "first list ok";
+list "push" "1.gif" "2.gif" "3.gif" "4.gif" "5.gif" "6.gif" "7.gif" "8.gif" "9.gif" ;
+list;
+if( _last_cmd_output != "../..//media/image.jpg ../..//media/fim.png ../..//media/image.png 1.gif 2.gif 3.gif 4.gif 5.gif 6.gif 7.gif 8.gif 9.gif " ) stdout "wrong pushed list: "._last_cmd_output; else stdout "pushed list ok";
+list "remove" "../..//media/image.png" ;
+list "remove" "../..//media/fim.png" ;
+list "remove" "../..//media/image.jpg" ;
+list;
+if( _last_cmd_output != "1.gif 2.gif 3.gif 4.gif 5.gif 6.gif 7.gif 8.gif 9.gif " ) stdout "wrong after-remove list: "._last_cmd_output; else stdout "after-remove list ok";
+list "filesnum";
+if( _last_cmd_output != "9" ) stdout "wrong after-remove list len: "._last_cmd_output; else stdout "after-remove list len ok";
+stdout _filelistlen;
+#
+2;
+list "mark" ;
+7;
+list "mark" ;
+#
+stdout _filelistlen;
+limit "!" "marked" ; # 2 and 7
+list;
+if( _last_cmd_output != "2.gif 7.gif " ) stdout "wrong limited list: "._last_cmd_output; else stdout "limited list ok";
+#
+list "reverse";
+list;
+if( _last_cmd_output != "7.gif 2.gif " ) stdout "wrong reverse list: "._last_cmd_output; else stdout "reverse list ok";
+#
+list "sort";
+list;
+if( _last_cmd_output != "2.gif 7.gif " ) stdout "wrong sortd list: "._last_cmd_output; else stdout "sorted list ok";
+#
+list "clear";
+list;
+if( _last_cmd_output != "" ) stdout "wrong cleared list: "._last_cmd_output; else stdout "cleared list ok";
+#
+limit; # unlimit
+#
+list;
+if( _last_cmd_output != "1.gif 2.gif 3.gif 4.gif 5.gif 6.gif 7.gif 8.gif 9.gif " ) stdout "wrong last list: "._last_cmd_output; else stdout "last list ok";
+#
+list "clear";
+list;
+if( _last_cmd_output != "" ) stdout "wrong cleared list: "._last_cmd_output; else stdout "cleared list ok";
+#
+if( _filelistlen != 0 ) stdout "wrong cleared list len: "._filelistlen; else stdout "cleared list len ok";
+#
+cd "..";
+list "pushdir" "numbers";
+list "sort";
+list;
+if( _last_cmd_output != "numbers/0.gif numbers/1.gif numbers/2.gif numbers/3.gif numbers/4.gif numbers/5.gif numbers/6.gif numbers/7.gif numbers/8.gif numbers/9.gif " ) stdout "wrong pushdir list: "._last_cmd_output; else stdout "pushdir list ok";
+#
+stdout "List/limit test: DONE.";
+#
+# TODO: still need:
+# variables vars pushdirr random_shuffle sort_basename sort_mtime sort_fsize swap pop
+# marked unmark dumpmarked unmarkall
+#
+# marked files output list will follow

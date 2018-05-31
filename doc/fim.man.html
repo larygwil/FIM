@@ -1,0 +1,1291 @@
+<!-- Creator     : groff version 1.21 -->
+<!-- CreationDate: Sun Jan 28 18:18:52 2018 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>fim</title>
+
+</head>
+<body>
+
+<h1 align="center">fim</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#USAGE">USAGE</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#PROGRAM RETURN STATUS">PROGRAM RETURN STATUS</a><br>
+<a href="#COMMON KEYS AND COMMANDS">COMMON KEYS AND COMMANDS</a><br>
+<a href="#AFFECTING ENVIRONMENT VARIABLES">AFFECTING ENVIRONMENT VARIABLES</a><br>
+<a href="#COMMON PROBLEMS">COMMON PROBLEMS</a><br>
+<a href="#INVOCATION EXAMPLES">INVOCATION EXAMPLES</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#FILES">FILES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">fim -
+<b>f</b>bi (linux <b>f</b>rame<b>b</b>uffer
+<b>i</b>mageviewer) <b>im</b>proved</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim
+[{options}] [--] {imagepath} [{imagepaths}] <br>
+... | fim [{options}] [--] [{imagepaths}]
+- <br>
+fim [{options}] [--] [{files}] - &lt;
+{file_name_list_text_file} <br>
+fim --image-from-stdin [{options}]
+&lt; {imagefile} <br>
+fim --script-from-stdin [{options}]
+&lt; {scriptfile} <br>
+fim --help[=s|d|l|m] [{help-item}
+...]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b> is a
+&rsquo;swiss army knife&rsquo; for displaying image files.
+It is capable of displaying image files using different
+graphical devices while offering a uniform look and feel; it
+features an internal command language specialized to the
+image viewing purposes; it is capable of interacting with
+standard input and output; the internal command language is
+accessible via a command line capable of autocompletion and
+history; it features command recording, supports
+initialization files, customizable key bindings, internal
+variables and command aliases, vim-like autocommands,
+JPEG comments, EXIF tags display, EXIF rotation/orientation,
+and much more.</p>
+
+<p style="margin-left:11%; margin-top: 1em">As a default,
+<b>fim</b> displays the specified file(s) on the detected
+graphical device (e.g. with SDL if X is detected, or the
+linux framebuffer device if not). Graphical file formats
+BMP, PCX are supported natively, while JPEG, PNG, GIF, TIFF,
+PPM, PGM, PBM are supported via third party libraries.
+Further formats are supported via external converters. For
+&rsquo;XCF&rsquo; (Gimp&rsquo;s) images, fim will try to use
+&rsquo;xcftopnm&rsquo;. For &rsquo;.FIG&rsquo; vectorial
+images, fim will try to use &rsquo;fig2dev&rsquo;. For
+&rsquo;.DIA&rsquo; vectorial images, fim will try to use
+&rsquo;dia&rsquo;. For &rsquo;.SVG&rsquo; vectorial images,
+fim will try to use &rsquo;inkscape&rsquo;. For other
+formats fim will try to use ImageMagick&rsquo;s
+&rsquo;convert&rsquo; executable.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If
+<b>{imagepath}</b> is a file, its format is guessed not by
+its name but by its contents (see e.g. the _file_loader
+variable to change this default).</p>
+
+<p style="margin-left:11%; margin-top: 1em">If
+<b>{imagepath}</b> is a directory, therein contained files
+of supported formats will be loaded. If <b>{imagepath}</b>
+contains a trailing slash (/), it will be treated as a
+directory; otherwise a check will be made using
+<b>stat(2)</b>. To change this default, see description of
+the _pushdir_re variable and the
+--no-stat-push and
+--recursive options.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If configured
+at build time, fim will be capable of using SDL or aalib
+output.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This man page
+only describes the <b>fim</b> command line options. See man
+<i>fimrc</i>(5) for a full specification of the <b>fim</b>
+language, commands, variables, and an example configuration
+file.</p>
+
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">You may invoke
+<b>fim</b> from an interactive shell and control it with the
+keyboard, as you would do with any image viewer with
+reasonable key bindings.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b> is
+keyboard oriented: there are no user menus or buttons
+available. If you need some feature or setting which is not
+accessible from the default keyboard configuration, you
+probably need a custom configuration or simply need to type
+a custom command. For these, you can use the internal
+command and configuration language. The full specification
+for these is accessible at runtime using the internal help
+system (typing :help).</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Accepted
+command line <b>{options}</b> :</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>--</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>The arguments before <b>--</b> beginning
+with <b>-</b> will be treated as command line options.
+All arguments after <b>--</b> will be treated as
+filenames regardlessly.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>-a,
+--autozoom</b></p>
+
+<p style="margin-left:22%;">Enable autozoom. fim will
+automagically pick a reasonable zoom factor when loading a
+new image (as in fbi).</p>
+
+<p style="margin-left:11%;"><b>-b,
+--binary[=24|1]</b></p>
+
+<p style="margin-left:22%;">Display (any filetype) binary
+files contents as they were raw 24 or 1 bits per pixel
+pixelmaps. Image width will not exceed the value of the
+_preferred_rendering_width variable. Regard this as an
+easter bunny option.</p>
+
+
+<p style="margin-left:11%;"><b>--as-text</b></p>
+
+<p style="margin-left:22%;">Display (any filetype) files
+contents as they were text. Image width will not exceed the
+value of the _preferred_rendering_width variable.
+Non-printable characters will be displayed as &quot;
+&quot;. Regard this as an easter bunny option.</p>
+
+
+<p style="margin-left:11%;"><b>--cd-and-readdir</b></p>
+
+<p style="margin-left:22%;">Step into the first loaded file
+directory and push other files.</p>
+
+<p style="margin-left:11%;"><b>-c {commands},
+--execute-commands {commands}</b></p>
+
+<p style="margin-left:22%;">The <b>commands</b> string will
+be executed before entering the interactive loop. Please
+note that if your commands are more complicated than a
+simple &rsquo;next&rsquo; or &rsquo;pornview&rsquo; command,
+they must be quoted and escaped in a manner suitable to your
+shell. If no semicolon (;) at <b>commands</b> end, one will
+be appended.</p>
+
+<p style="margin-left:22%; margin-top: 1em">For example,
+-c &rsquo;*2;2pan_up;display;while(1){align
+&quot;bottom&quot;;sleep &quot;1&quot; ; align
+&quot;top&quot;}&rsquo; (with the single quotes) will tell
+fim to first double the displayed image size, then pan two
+times up, then display the image ; and then do an endless
+loop consisting of bottom and top aligning, alternated.</p>
+
+<p style="margin-left:11%;"><b>-C {commands},
+--execute-commands-early
+{commands}</b></p>
+
+<p style="margin-left:22%;">Similar to the
+--execute-commands option, but commands
+will be executed before the loading of any config file.</p>
+
+<p style="margin-left:22%; margin-top: 1em">For example,
+-C &rsquo;_scale_style=&quot; &quot;&rsquo; will make
+fim start with no auto-scaling.</p>
+
+<p style="margin-left:11%;"><b>-d {framebuffer
+device}, --device {framebuffer device}</b></p>
+
+<p style="margin-left:22%;">Framebuffer device to use.
+Default is the one your vc is mapped to (as in fbi).</p>
+
+
+<p style="margin-left:11%;"><b>--dump-reference-help[=man].</b></p>
+
+<p style="margin-left:22%;">Will dump to stdout the
+language reference help.</p>
+
+
+<p style="margin-left:11%;"><b>--dump-default-fimrc</b></p>
+
+<p style="margin-left:22%;">The default configuration (the
+one hardcoded in the fim executable) is dumped on standard
+output and fim exits.</p>
+
+<p style="margin-left:11%;"><b>-E {scriptfile},
+--execute-script {scriptfile}</b></p>
+
+<p style="margin-left:22%;">The <b>scriptfile</b> will be
+executed right after the default initialization file is
+executed.</p>
+
+<p style="margin-left:11%;"><b>-f {fimrc},
+--etc-fimrc {fimrc}</b></p>
+
+<p style="margin-left:22%;">Specify an alternative system
+wide initialization file (default: /usr/local/etc/fimrc),
+which will be executed prior to any other configuration
+file.</p>
+
+<p style="margin-left:11%;"><b>-F {commands},
+--final-commands {commands}</b></p>
+
+<p style="margin-left:22%;">The <b>commands</b> string will
+be executed after exiting the interactive loop of the
+program (right before terminating the program).</p>
+
+<p style="margin-left:11%;"><b>-h,
+--help[=s|d|l|m]</b></p>
+
+<p style="margin-left:22%;">Print (short, descriptive,
+long, or complete man) program invocation help, and exit. If
+further arguments follow, individual help messages will be
+shown instead.</p>
+
+<p style="margin-left:11%;"><b>-k,
+--keysym-press &lt;arg&gt;</b></p>
+
+<p style="margin-left:22%;">Execute simulated press of
+keysym at startup. Keysym can be prefixed by a repetition
+count number. Option can be specified multiple times to
+simulate multiple keystrokes.</p>
+
+<p style="margin-left:11%;"><b>-D {filename},
+--load-image-descriptions-file
+{filename}</b></p>
+
+<p style="margin-left:22%;">Load image descriptions from
+{filename}. In {filename} each line is the name of an image
+file (its basename will be taken), then a Tab character
+(unless a different character is specified via
+--image-descriptions-file-separator),
+then the description text. Each description will be put in
+the _comment variable of the image at load time. Will
+override the comment eventually loaded from the file (e.g.
+JPEG, PNG or TIFF comment). If a &rsquo;@&rsquo; followed by
+a {var} (made by alphabetic and &rsquo;_&rsquo; characters)
+is encountered, and i:{var} is set, its value will be
+substituted here. If &quot;@#&quot; is encountered, the
+remainder of the description line is ignored. Special
+comment lines like &quot;#!fim:var=val&quot; will lead i:var
+to be assigned value val (unquoted) at image loading time
+(cached variable). Special comment lines like
+&quot;#!fim:+=val&quot; will add val to current description.
+Special comment lines like &quot;#!fim:^=val&quot; will set
+val to be the base of each description. Special comment
+lines like &quot;#!fim:!=&quot; will reset all cached
+variables. Special comment lines like
+&quot;#!fim:/=dir&quot; will prepend dir to each
+file&rsquo;s basename. Special comment lines like
+&quot;#!fim:\=dir&quot; will prepend dir to each
+file&rsquo;s name. Special description text begins with
+markers: with &quot;#!fim:=&quot; the last description line
+to be used; with &quot;#!fim:+&quot; what follows + will be
+appended to the last description line; with
+&quot;#!fim:^&quot; what follows ^ will be prepended to the
+last description line; with &quot;#!fim:s/f/t&quot; the last
+description line will be used, but occurrences of string f
+will be substituted with string t (f and t can contain
+anything but not a /). If val is empty that variable will be
+unset. These variables are stored also in an internal index
+used by the limit command. This option sets
+_caption_over_image=2, so that a caption will be displayed
+over the image.</p>
+
+<p style="margin-left:11%;"><b>-S {sepchar},
+--image-descriptions-file-separator
+{sepchar}</b></p>
+
+<p style="margin-left:22%;">A character to be used as a
+separator between the filename and the description part of
+lines specified just before a
+--load-image-descriptions-file.</p>
+
+<p style="margin-left:11%;"><b>-i,
+--image-from-stdin</b></p>
+
+<p style="margin-left:22%;">Will read one single image from
+the standard input (the image data, not the filename). May
+not work with all supported file formats. In the image list,
+this image will be displayed as
+&quot;&lt;STDIN&gt;&quot;.</p>
+
+
+<p style="margin-left:11%;"><b>--mark-from-image-descriptions-file
+{filename}</b></p>
+
+<p style="margin-left:22%;">Set those files specified in
+{filename} (see
+--load-image-descriptions-file
+for the file format) as marked (see the list command).</p>
+
+<p style="margin-left:11%;"><b>-m {vmode},
+--mode {vmode}</b></p>
+
+<p style="margin-left:22%;">Name of the video mode to use
+video mode (must be listed in /etc/fb.modes). Default is not
+to change the video mode. In the past, the XF86 config file
+(/etc/X11/XF86Config) used to contain Modeline information,
+which could be fed to the modeline2fb perl script
+(distributed with fbset). On many modern xorg based systems,
+there is no direct way to obtain a fb.modes file from the
+xorg.conf file. So instead one could obtain useful fb.modes
+info by using the (fbmodes (no man page AFAIK)) tool,
+written by bisqwit. An unsupported mode should make fim exit
+with failure. But it is possible the kernel could trick fim
+and set a supported mode automatically, thus ignoring the
+user set mode.</p>
+
+<p style="margin-left:11%;"><b>-N,
+--no-rc-file</b></p>
+
+<p style="margin-left:22%;">No personal initialization file
+will be read (default is ~/.fimrc) at startup.</p>
+
+
+<p style="margin-left:11%;"><b>--no-etc-rc-file</b></p>
+
+<p style="margin-left:22%;">No system wide initialization
+file will be read (default is /usr/local/etc/fimrc) at
+startup.</p>
+
+
+<p style="margin-left:11%;"><b>--no-internal-config</b></p>
+
+<p style="margin-left:22%;">No internal default
+configuration at startup (uses internal variable
+_no_default_configuration). Will only provide a minimal
+working configuration.</p>
+
+
+<p style="margin-left:11%;"><b>--no-commandline</b></p>
+
+<p style="margin-left:22%;">With internal command line mode
+disabled.</p>
+
+
+<p style="margin-left:11%;"><b>--no-history-save</b></p>
+
+<p style="margin-left:22%;">Do not save execution history
+at finalization (uses internal variable
+_save_fim_history).</p>
+
+
+<p style="margin-left:11%;"><b>--no-history-load</b></p>
+
+<p style="margin-left:22%;">Do not load execution history
+at startup.</p>
+
+
+<p style="margin-left:11%;"><b>--no-history</b></p>
+
+<p style="margin-left:22%;">Do not load or save execution
+history at startup.</p>
+
+<p style="margin-left:11%;"><b>-p,
+--script-from-stdin</b></p>
+
+<p style="margin-left:22%;">Will read commands from stdin
+prior to entering in interactive mode.</p>
+
+<p style="margin-left:11%;"><b>-o
+[fb|sdl|aa|imlib2|caca|dumb],
+--output-device <br>
+[fb|sdl|aa|imlib2|caca|dumb]</b></p>
+
+<p style="margin-left:22%;">Will use the specified
+<b>device</b> as fim video output device, overriding
+automatic checks.The available devices depend on the
+original configuration/compilation options, so you should
+get the list of available output devices issuing <b>fim
+--version</b>. The <b>aa</b> option may be
+specified as <b>aa={[&rsquo;w&rsquo;]}</b> ; the
+<b>&rsquo;w&rsquo;</b> character allows windowed mode in
+case of aalib running under X (otherwise, the DISPLAY
+environment variable will be unset for the current instance
+of fim). The <b>sdl</b> option may be specified as
+<b>sdl={[&rsquo;w&rsquo;][&rsquo;m&rsquo;][&rsquo;r&rsquo;][&rsquo;W&rsquo;][&rsquo;M&rsquo;][&rsquo;R&rsquo;]width:height}</b>
+, where <b>width</b> is and <b>height</b> are integer
+numbers specifying the desired resolution; the
+<b>&rsquo;w&rsquo;</b> character requests windowed mode; the
+<b>&rsquo;m&rsquo;</b> character requests mouse pointer
+display; the <b>&rsquo;r&rsquo;</b> character requests
+support for window resize; the same letters uppercase
+request explicit negation of the mentioned features. The
+<b>imlib2</b> option requests imlib2. The <b>caca</b> option
+is now unmantained.</p>
+
+<p style="margin-left:11%;"><b>--offset
+{bytes-offset[{:upper-offset}|{+offset-range}]}</b></p>
+
+<p style="margin-left:22%;">Will use the specified
+<b>offset</b> (in bytes) for opening the specified files. If
+<b>:upper-offset</b> is specified, further bytes until
+<b>upper-offset</b> will be probed. If
+<b>+offset-range</b> is specified instead, that many
+additional bytes will be probed. Use this option to search
+damaged file systems for image files.</p>
+
+<p style="margin-left:11%;"><b>-P,
+--text-reading</b></p>
+
+<p style="margin-left:22%;">Enable textreading mode. This
+has the effect that fim will display images scaled to the
+width of the screen, and aligned to the top. If the images
+you are watching are text pages, all you have to do to get
+the next piece of text is to press space (in the default key
+configuration, of course).</p>
+
+<p style="margin-left:11%;"><b>-s {value},
+--scroll {value}</b></p>
+
+<p style="margin-left:22%;">Set scroll steps for internal
+variable _steps (default is 20%).</p>
+
+<p style="margin-left:11%;"><b>--slideshow
+{number}</b></p>
+
+<p style="margin-left:22%;">Interruptible slideshow mode;
+will wait for {number} of seconds (assigned to the
+_want_sleep_seconds variable after each loading; implemented
+by executing while(_fileindex&lt;_filelistlen){sleep
+_want_sleep_seconds; next;} as a first command.</p>
+
+
+<p style="margin-left:11%;"><b>--sanity-check</b></p>
+
+<p style="margin-left:22%;">Perform a quick sanity check,
+just after the initialization, and terminate.</p>
+
+<p style="margin-left:11%;"><b>-t,
+--no-framebuffer</b></p>
+
+<p style="margin-left:22%;">Fim will not use the
+framebuffer but the aalib (ASCII art) driver instead (if you
+are curious, see (info aalib)). If aalib was not enabled at
+tompile time, fim will work without displaying images at
+all.</p>
+
+<p style="margin-left:11%;"><b>-T {terminal},
+--vt {terminal}</b></p>
+
+<p style="margin-left:22%;">The <b>terminal</b> will be
+used as virtual terminal device file (as in fbi). See (chvt
+(1)), (openvt (1)) for more info about this. Use (con2fb
+(1)) to map a terminal to a framebuffer device.</p>
+
+
+<p style="margin-left:11%;"><b>--reverse</b></p>
+
+<p style="margin-left:22%;">Reverse files list before
+browsing (can be combined with the other sorting
+options).</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><b>--sort</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>Sort files list before browsing according to full
+filename.</p> </td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>--sort-basename</b></p>
+
+<p style="margin-left:22%;">Sort files list before browsing
+according to file basename&rsquo;s.</p>
+
+
+<p style="margin-left:11%;"><b>--sort-mtime</b></p>
+
+<p style="margin-left:22%;">Sort files list before browsing
+according to file modification time.</p>
+
+
+<p style="margin-left:11%;"><b>--sort-fsize</b></p>
+
+<p style="margin-left:22%;">Sort files list before browsing
+according to file size.</p>
+
+<p style="margin-left:11%;"><b>-u,
+--random</b></p>
+
+<p style="margin-left:22%;">Randomly shuffle the files list
+before browsing (seed depending on time() function).</p>
+
+
+<p style="margin-left:11%;"><b>--random-no-seed</b></p>
+
+<p style="margin-left:22%;">Randomly shuffle the files list
+before browsing (no seeding).</p>
+
+<p style="margin-left:11%;"><b>-v,
+--verbose</b></p>
+
+<p style="margin-left:22%;">Be verbose: show status
+bar.</p>
+
+
+<p style="margin-left:11%;"><b>--verbose-load</b></p>
+
+<p style="margin-left:22%;">Load files verbosely (repeat
+option to increase verbosity).</p>
+
+
+<p style="margin-left:11%;"><b>--verbose-font-load</b></p>
+
+<p style="margin-left:22%;">Load font verbosely (sets
+_fbfont_verbosity).</p>
+
+
+<p style="margin-left:11%;"><b>--verbose-interpreter</b></p>
+
+<p style="margin-left:22%;">Execute interpreter verbosely
+(Sets immediately _debug_commands=&quot;ackC&quot; if
+specified once, _debug_commands=&quot;ackCi&quot; if
+specified twice).</p>
+
+<p style="margin-left:11%;"><b>-V,
+--version</b></p>
+
+<p style="margin-left:22%;">Print to stdout program
+version, compile flags, enabled features, linked libraries
+information, supported filetypes/file loaders, and then
+exit.</p>
+
+<p style="margin-left:11%;"><b>-w,
+--autowidth</b></p>
+
+<p style="margin-left:22%;">Scale the image according to
+the screen width.</p>
+
+
+<p style="margin-left:11%;"><b>--no-auto-scale</b></p>
+
+<p style="margin-left:22%;">Do not scale the images after
+loading (will set &rsquo;_scale_style=&quot;
+&quot;&rsquo;;).</p>
+
+
+<p style="margin-left:11%;"><b>--autowindow</b></p>
+
+<p style="margin-left:22%;">Will resize the window size (if
+supported) to the image size. Don&rsquo;t use this with
+other image scaling options.</p>
+
+
+<p style="margin-left:11%;"><b>--no-stat-push</b></p>
+
+<p style="margin-left:22%;">Sets _push_checks=0 before
+initialization, thus disabling file/dir existence checks
+with stat(2) at push push time (and speeding up
+startup).</p>
+
+<p style="margin-left:11%;"><b>-H,
+--autoheight</b></p>
+
+<p style="margin-left:22%;">Scale the image according to
+the screen height.</p>
+
+<p style="margin-left:11%;"><b>-W {scriptfile},
+--write-scriptout {scriptfile}</b></p>
+
+<p style="margin-left:22%;">All the characters that you
+type are recorded in the file {scriptout}, until you exit
+Fim. This is useful if you want to create a script file to
+be used with &quot;fim -c&quot; or &quot;:exec&quot;
+(analogous to Vim&rsquo;s -s and
+&quot;:source!&quot;). If the {scriptout} file exists, it
+will be not touched (as in Vim&rsquo;s -w).</p>
+
+<p style="margin-left:11%;"><b>-L,
+--read-from-file &lt;arg&gt;</b></p>
+
+<p style="margin-left:22%;">Read file list from file: each
+line one file to load (similar to
+--read-from-stdin; use
+--read-from-stdin-elds to
+control line breaking).</p>
+
+<p style="margin-left:11%;"><b>-,
+--read-from-stdin</b></p>
+
+<p style="margin-left:22%;">Read file list from stdin: each
+line one file to load; use with
+--read-from-stdin-elds to
+control line breaking).</p>
+
+<p style="margin-left:22%; margin-top: 1em">Note that these
+the three standard input reading functionalities
+(-i,-p and -) conflict : if two or more of
+them occur in fim invocation, fim will exit with an error
+and warn about the ambiguity.</p>
+
+<p style="margin-left:22%; margin-top: 1em">See the section
+<b>INVOCATION EXAMPLES</b> below to read some useful (and
+unique) ways of employing fim.</p>
+
+
+<p style="margin-left:11%;"><b>--read-from-stdin-elds
+&lt;arg&gt;</b></p>
+
+<p style="margin-left:22%;">Specify an endline delimiter
+character for breaking lines read via
+-/--read-from-stdin/--read-from-file
+(which shall be specified after this). Line text before the
+delimiter will be treated as names of files to load; the
+text after will be ignored. This is also useful e.g. to load
+description files (see
+--load-image-descriptions-file)
+as filename list files. Default is the newline character
+(0x0A); to specify an ASCII NUL byte (0x00) use
+&rsquo;&rsquo;.</p>
+
+<p style="margin-left:11%;"><b>-A,
+--autotop</b></p>
+
+<p style="margin-left:22%;">Align images to the top border
+(by setting &rsquo;_autotop=1&rsquo; after
+initialization).</p>
+
+<p style="margin-left:11%;"><b>-q,
+--quiet</b></p>
+
+<p style="margin-left:22%;">Quiet mode. Sets
+_display_status=0;_display_busy=0;.</p>
+
+<p style="margin-left:11%;"><b>-r {width:height},
+--resolution {width:height}</b></p>
+
+<p style="margin-left:22%;">Set resolution specification in
+pixels. Supported by SDL only (will be appended to
+--output-device argument).</p>
+
+<p style="margin-left:11%;"><b>-R,
+--recursive[=arg]</b></p>
+
+<p style="margin-left:22%;">Push files/directories to the
+files list recursively. The expression in variable
+_pushdir_re (default:
+&quot;.JPG$|.PNG$|.GIF$|.BMP$|.TIFF$|.TIF$|.JPEG$|.JFIF$|.PPM$|.PGM$|.PBM$|.PCX$&quot;)
+lists extensions of filenames which will be loaded in the
+list. You can overwrite its value by optionally passing an
+expression here as argument. If starting with
+&rsquo;+&rsquo; or &rsquo;|&rsquo;, the expression following
+will be appended to it.</p>
+
+<p style="margin-left:11%;"><b>-X,
+--no-pipe-load</b></p>
+
+<p style="margin-left:22%;">Do not load via external
+converter programs.</p>
+
+<p style="margin-left:11%;"><b>-B,
+--background-recursive</b></p>
+
+<p style="margin-left:22%;">Push files/directories to the
+files list recursively, in background during program
+execution (any sorting options will be ignored).</p>
+
+<p style="margin-left:11%;"><b>-/, --/
+&lt;arg&gt;</b></p>
+
+<p style="margin-left:22%;">After startup jump to pattern;
+short for -c &rsquo;/&rsquo;.</p>
+
+<p style="margin-left:11%;"><b>--//
+&lt;arg&gt;</b></p>
+
+<p style="margin-left:22%;">After startup jump to pattern;
+as -c &rsquo;/&rsquo; but with search on the full path
+(with _re_search_opts=&quot;f&quot;).</p>
+
+<h2>PROGRAM RETURN STATUS
+<a name="PROGRAM RETURN STATUS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The program
+return status is 0 on correct operation; 252 on unsupported
+device specification; 248 on bad input; 255 on a generic
+error; 42 on a signal-triggered program exit; or a
+different value in case of an another error. <br>
+The return status may be controlled by the use of the quit
+command.</p>
+
+<h2>COMMON KEYS AND COMMANDS
+<a name="COMMON KEYS AND COMMANDS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The following
+keys and commands are hardcoded in the minimal
+configuration. These are working by default before any
+config loading, and before the hardcoded config loading (see
+variable _fim_default_config_file_contents).</p>
+
+<p style="margin-left:11%; margin-top: 1em">n goto
+&rsquo;+1f&rsquo; <br>
+p goto &rsquo;-1f&rsquo; <br>
++ magnify <br>
+- reduce <br>
+h pan &rsquo;left&rsquo; <br>
+l pan &rsquo;right&rsquo; <br>
+k pan &rsquo;up-&rsquo; <br>
+j pan &rsquo;down+&rsquo; <br>
+q quit <br>
+You can type a number before a command binding to iterate
+the assigned command: <br>
+3k 3pan &rsquo;up-&rsquo;</p>
+
+<p style="margin-left:11%; margin-top: 1em">: enter command
+line mode <br>
+:{number} jump to {number}^th image in the list</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>:^</p></td>
+<td width="85%">
+
+
+<p>jump to first image in the list</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>:$</p></td>
+<td width="85%">
+
+
+<p>jump to last image in the list</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">:*{factor} scale the image by
+{factor} <br>
+:{scale}% scale the image to the desired {scale} <br>
+:+{scale}% scale the image up to the desired percentage
+{scale} (relatively to the original) <br>
+:-{scale}% scale the image down to the desired
+percentage {scale} (relatively to the original)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/{regexp}</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>entering the pattern {regexp} (with /) makes fim jump to
+the next image whose filename matches {regexp}</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/*.png$</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>entering this pattern (with /) makes fim jump to the
+next image whose filename ends with &rsquo;png&rsquo;</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>/png</p></td>
+<td width="8%">
+</td>
+<td width="8%">
+
+
+<p>a shortcut for /.*png.*</p></td>
+<td width="69%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>!{syscmd}</p></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>executes the {syscmd} quoted string as an argument to
+the &quot;system&quot; fim command.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">You can
+visualize all of the default bindings invoking fim
+--dump-default-fimrc | grep bind .
+<br>
+You can visualize all of the default aliases invoking fim
+--dump-default-fimrc | grep alias
+.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The Return vs.
+Space key thing can be used to create a file list while
+reviewing the images and use the list for batch processing
+later on.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All of the key
+bindings are reconfigurable; see the default <b>fimrc</b>
+file for examples on this, or read the complete manual: the
+FIM.TXT file distributed with fim.</p>
+
+<h2>AFFECTING ENVIRONMENT VARIABLES
+<a name="AFFECTING ENVIRONMENT VARIABLES"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%">
+
+
+<p>FBFONT</p></td>
+<td width="7%"></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>(just like in fbi) a Linux consolefont font file.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">If using a gzipped font, the
+zcat program will be used to uncompress it (via
+<b>execvp(3)</b>). <br>
+If not specified, the following files will be probed and the
+first existing will be selected:</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">/usr/share/kbd/consolefonts/cp866-8x16.psf.gz
+<br>
+/usr/share/consolefonts/Uni3-TerminusBoldVGA14.psf.gz
+<br>
+/usr/lib/kbd/consolefonts/lat9-16.psf.gz <br>
+/usr/share/consolefonts/lat1-16.psf <br>
+/usr/share/consolefonts/lat1-16.psf.gz <br>
+/usr/share/consolefonts/lat1-16.psfu.gz <br>
+/usr/share/kbd/consolefonts/lat1-16.psf <br>
+/usr/share/kbd/consolefonts/lat1-16.psf.gz <br>
+/usr/share/kbd/consolefonts/lat1-16.psfu.gz <br>
+/usr/lib/kbd/consolefonts/lat1-16.psf <br>
+/usr/lib/kbd/consolefonts/lat1-16.psf.gz <br>
+/usr/lib/kbd/consolefonts/lat1-16.psfu.gz <br>
+/lib/kbd/consolefonts/lat1-16.psf <br>
+/lib/kbd/consolefonts/lat1-16.psf.gz <br>
+/lib/kbd/consolefonts/lat1-16.psfu.gz <br>
+/lib/kbd/consolefonts/Lat2-VGA14.psf.gz <br>
+/lib/kbd/consolefonts/Lat2-VGA16.psf.gz <br>
+/lib/kbd/consolefonts/Lat2-VGA8.psf.gz <br>
+/lib/kbd/consolefonts/Uni2-VGA16.psf.gz <br>
+/usr/share/consolefonts/default8x16.psf.gz <br>
+/usr/share/consolefonts/default8x9.psf.gz <br>
+/usr/share/consolefonts/Lat15-Fixed16.psf.gz <br>
+/usr/share/consolefonts/default.psf.gz <br>
+fim://</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the special
+fim:// string is specified, a hardcoded font will be
+used.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%">
+
+
+<p>FBGAMMA</p></td>
+<td width="7%"></td>
+<td width="8%"></td>
+<td width="8%">
+</td>
+<td width="69%">
+
+
+<p>(just like in fbi) gamma correction (applies to dithered
+8 bit mode only). Default is 1.0.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%">
+
+
+<p>FRAMEBUFFER</p></td>
+<td width="7%"></td>
+<td width="8%"></td>
+<td width="8%"></td>
+<td width="69%">
+
+
+<p>(just like in fbi) user set framebuffer device file
+(applies only to the fb mode).</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">If unset, fim will probe for
+/dev/fb0.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>TERM</p></td>
+<td width="8%">
+</td>
+<td width="77%">
+
+
+<p>(only in fim) will influence the output device selection
+algorithm, especially if $TERM==&quot;screen&quot;.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>SSH_TTY</p></td>
+<td width="8%"></td>
+<td width="77%">
+
+
+<p>if set and no output device specified, will give
+precedence to the aa driver.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="-3%"></td>
+<td width="7%">
+
+
+<p>DISPLAY</p></td>
+<td width="8%"></td>
+<td width="77%">
+
+
+<p>If this variable is set, then the sdl driver will be
+probed by default.</p></td></tr>
+</table>
+
+<h2>COMMON PROBLEMS
+<a name="COMMON PROBLEMS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b>
+needs read-write access to the framebuffer devices
+(/dev/fbN or /dev/fb/N), i.e you (our your admin) have to
+make sure fim can open the devices in rw mode. The IMHO most
+elegant way is to use pam_console (see
+/etc/security/console.perms) to chown the devices to the
+user logged in on the console. Another way is to create some
+group, chown the special files to that group and put the
+users which are allowed to use the framebuffer device into
+the group. You can also make the special files world
+writable, but be aware of the security implications this
+has. On a private box it might be fine to handle it this way
+through.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If using udev,
+you can edit:
+/etc/udev/permissions.d/50-udev.permissions and set
+these lines like here: <br>
+# fb devices <br>
+fb:root:root:0600 <br>
+fb[0-9]*:root:root:0600 <br>
+fb/*:root:root:0600</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b> also
+needs access to the linux console (i.e. /dev/ttyN) for sane
+console switch handling. That is obviously no problem for
+console logins, but any kind of a pseudo tty (xterm, ssh,
+screen, ...) will <b>not</b> work.</p>
+
+<h2>INVOCATION EXAMPLES
+<a name="INVOCATION EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim
+--help -R -B</b> <br>
+# Will ask for help for options -R and -B.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim
+media/</b> <br>
+# Will load files from the directory media.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim -R
+media/ --sort</b> <br>
+# Will open files found by recursive traversal of directory
+media, then sorting the list.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>find
+/mnt/media/ -name *.jpg | fim -</b> <br>
+# Will make fim read the file list from standard input.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>find
+/mnt/media/ -name *.jpg | shuf | fim -</b> <br>
+# will make fim read the file list from standard input,
+randomly shuffled.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>cat
+script.fim | fim -p images/*</b> <br>
+# Will make fim read the script file <b>script.fim</b> from
+standard input prior to displaying files in the directory
+<b>images</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>scanimage
+... | tee scan.ppm | fim -i</b> <br>
+# Will make fim read the image scanned from a flatbed
+scanner as soon as it is read</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>h5topng
+-x 1 -y 2 dataset.hdf -o /dev/stdout | fim
+-i</b> <br>
+# Use fim to visualize a slice from an HDF5 dataset file</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim * &gt;
+selection.txt</b> <br>
+# Will output the file names marked interactively with the
+&rsquo;list &quot;mark&quot;&rsquo; command in fim to a
+file.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim * | fim
+-</b> <br>
+# will output the file names marked with &rsquo;m&rsquo; in
+fim to a second instance of fim, in which these could be
+marked again.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b>
+-c &rsquo;pread &quot;vgrabbj -d /dev/video0
+-o png&quot;;reload&rsquo; <br>
+# will display an image grabbed from a webcam.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b>
+-o aa -c &rsquo;pread &quot;vgrabbj -d
+/dev/video0 -o png&quot;;reload;system
+&quot;fbgrab&quot; &quot;asciime.png&quot;&rsquo; <br>
+# if running in framebuffer mode, will save a png screenshot
+with an ASCII rendering of an image grabbed from a
+webcam.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b>
+-c &rsquo;while(1){pread &quot;vgrabbj -d
+/dev/video0 -o png&quot;;reload;sleep 1;};&rsquo; <br>
+# will display a sequence of images grabbed from a webcam;
+circa 1 per second.</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page is neither accurate nor complete. In particular, issues
+related to driver selection shall be described more
+accurately. Also the accurate sequence of autocommands
+execution, variables application is critical to
+understanding fim, and should be documented. The filename
+&quot;&lt;STDIN&gt;&quot; is reserved for images read from
+standard input (view this as a limitation), and thus
+handling files with such name may incur in limitations. The
+SDL driver is quite inefficient, for a variety of reasons.
+In particular, its interaction with the readline library can
+be problematic (e.g.: when running in sdl mode without a
+terminal). This shall be fixed.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>fim</b> has
+bugs. Please read the <b>BUGS</b> file shipped in the
+documentation directory to discover the known ones.</p>
+
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>/usr/local/share/doc/fim</b></p>
+
+<p style="margin-left:34%;">The directory with <b>Fim</b>
+documentation files.</p>
+
+
+<p style="margin-left:11%;"><b>/usr/local/etc/fimrc</b></p>
+
+<p style="margin-left:34%;">The system wide <b>Fim</b>
+initialization file (executed at startup, after executing
+the hardcoded configuration).</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="15%">
+
+
+<p><b>~/.fimrc</b></p></td>
+<td width="8%"></td>
+<td width="66%">
+
+
+<p>The personal <b>Fim</b> initialization file (executed at
+startup, after the system wide initialization file).</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="15%">
+
+
+<p><b>~/.inputrc</b></p></td>
+<td width="8%"></td>
+<td width="66%">
+
+
+<p>If <b>Fim</b> is built with GNU readline support, it
+will be susceptible to chages in the user set ~/.inputrc
+configuration file contents. For details, see (man
+<i>readline</i>(3)).</p> </td></tr>
+</table>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Other
+<b>Fim</b> man pages: <i>fimgs</i>(1), <i>fimrc</i>(1). <br>
+Or related programs: <i>fbset</i>(1), <i>con2fb</i>(1),
+<i>convert</i>(1), <i>vim</i>(1), <i>mutt</i>(1),
+<i>exiftool</i>(1), <i>exiftags</i>(1), <i>exiftime</i>(1),
+<i>exifcom</i>(1), <i>fbi</i>(1), <i>fbida</i>(1),
+<i>feh</i>(1), <i>fb.modes</i>(8), <i>fbset</i>(8),
+<i>fbgrab</i>(1), <i>fbdev</i>(4), <i>setfont</i>(8),
+<i>xfs</i>(1).</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Michele Martone
+&lt;dezperado _CUT_ autistici _CUT_ org&gt; is the author of
+fim, &quot;fbi improved&quot;.</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright (C)
+2007-2018 Michele Martone &lt;dezperado _CUT_
+autistici _CUT_ org&gt; (author of fim) <br>
+Copyright (C) 1999-2004 Gerd Hoffmann &lt;kraxel _CUT_
+bytesex.org&gt; is the author of &quot;fbi&quot;, upon which
+<b>fim</b> was originally based.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This program is
+distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.</p>
+
+<p style="margin-left:11%; margin-top: 1em">You should have
+received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA.</p>
+<hr>
+</body>
+</html>

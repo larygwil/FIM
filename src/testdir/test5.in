@@ -1,0 +1,17 @@
+if( "aba"."a"=="a"."ba"."a" ){stdout "string collation comparison works";}
+else {stdout "string collation comparison does not work"; quit -1;}
+
+if( "aba"!="a"."sba"."a" ){stdout "string collation inequality works";}
+else {stdout "string collation inequality does not work"; quit -1;}
+
+if( "aba"=~"a.*a" ){stdout "regular expressions operator works";}
+else {stdout "regular expressions operator does not work"; quit -1;}
+
+if( !("aba"=~"a.*a") ) {stdout "single negations on regular expressions don't work"; quit -1;}
+else {stdout "single negations on regular expressions work";}
+
+# the following doesn't work in fim 0.3.
+if( !(!("aba"=~"a.*a")) ){stdout "double negations on regular expressions work";}
+else {stdout "double negations on regular expressions don't work"; }
+
+stdout "string test success";

@@ -1,0 +1,113 @@
+
+*
+help {identifier}: provides help for {identifier}, if it is a variable, alias, or command. Use Tab in commandline mode to get a list of commands. Command line mode can be entered with the default key ':', and left pressing Enter.
+
+*
+The short command options of fim are: -a -b -c -C -d -E -f -F -h -k -D -S -i -m -N -p -o -P -s -t -T -u -v -V -w -H -W -L - -A -q -r -R -X -B -/ 
+"-" key is bound to command: reduce
+
+*
+-h is a fim command option: -h =[=s|d|l|m], --help =[=s|d|l|m]: Print (short, descriptive, long, or complete man) program invocation help, and exit. If further arguments follow, individual help messages will be shown instead.
+
+*
+The long command options of fim are: --autozoom --binary --as-text --cd-and-readdir --execute-commands --execute-commands-early --device --dump-reference-help --dump-default-fimrc --execute-script --etc-fimrc --final-commands --help --keysym-press --load-image-descriptions-file --image-descriptions-file-separator --image-from-stdin --mark-from-image-descriptions-file --mode --no-rc-file --no-etc-rc-file --no-internal-config --no-commandline --no-history-save --no-history-load --no-history --script-from-stdin --output-device --offset --text-reading --scroll --slideshow --sanity-check --no-framebuffer --vt --reverse --sort --sort-basename --sort-mtime --sort-fsize --random --random-no-seed --verbose --verbose-load --verbose-font-load --verbose-interpreter --version --autowidth --no-auto-scale --autowindow --no-stat-push --autoheight --write-scriptout --read-from-file --read-from-stdin --read-from-stdin-elds --autotop --quiet --resolution --recursive --no-pipe-load --background-recursive --/ --// 
+
+*
+--help is a fim command option: -h =[=s|d|l|m], --help =[=s|d|l|m]: Print (short, descriptive, long, or complete man) program invocation help, and exit. If further arguments follow, individual help messages will be shown instead.
+
+*
+alias align autocmd autocmd_del basename bind cd clear commands color desc display dump_key_codes echo else eval exec font getenv goto help if info limit list load pan popen pread prefetch pwd quit recording redisplay reload rotate scale scroll set set_commandline_mode set_interactive_mode sleep status stdout system variables unalias unbind while window
+*
+
+*
+_TERM _all_file_loaders _cache_control _command_expansion _console_buffer_free _console_buffer_total _console_buffer_used _console_key _console_lines _console_offset _debug_commands _device_string _display_as_binary _display_busy _display_console _display_status _display_status_fmt _downscale_huge_at_load _filelistlen _fim_bpp _fim_default_config_file_contents _fim_default_grammar_file_contents _fim_version _ignorecase _info_fmt_str _last_cmd_output _load_default_etc_fimrc _load_fim_history _max_cached_images _max_cached_memory _max_iterated_commands _min_cached_images _no_external_loader_programs _no_rc_file _push_checks _push_pushes_dirs _pwd _re_search_opts _save_fim_history _scale_style _screen_height _screen_width _scroll_skip_page_fraction _steps _sys_rc_file _use_mipmaps _verbose_keys _want_exif_orientation _want_prefetch _want_wm_caption_status _want_wm_mouse_ctrl allow_round_scroll ascale console_scroll_n  _orientation angle ascale desaturated negated scale    
+*
+bind "C-a" "if(_scale_style!='a'){_scale_style='a';scale 'a';}else{_scale_style='';scale '100%';}" # scale to height
+bind "C-b" "goto '-//'"
+bind "C-e" "recording 'execute'"
+bind "C-g" "system 'fbgrab fim.png'"
+bind "C-h" "help"
+bind "Tab" "toggleVerbosity"
+bind "Enter" "list 'mark';goto _lastgotodirection"
+bind "C-m" "list 'mark'"
+bind "C-n" "goto '+//'"
+bind "C-p" "goto '-//'"
+bind "C-r" "reload ''"
+bind "C-w" "if(_scale_style!='w'){_scale_style='w';scale 'w';}else{_scale_style='';scale '100%';}" # scale to width
+bind "C-x" "recording 'execute'"
+bind "Esc" "quit"
+bind "" "scale_factor_grow"
+bind "" "scale_factor_shrink"
+bind " " "scroll 'forward'"
+bind "$" "$;"
+bind "'" "goto _lastfileindex"
+bind "(" "goto '^p'"
+bind ")" "goto '$p'"
+bind "*" "_display_console=0;toggleVerbosity;echo i:*"
+bind "+" "magnify"
+bind "," "_display_console=1;echo _last_system_output"
+bind "-" "reduce"
+bind "." "recording 'repeat_last'"
+bind "<" "rotate10_ccw;display"
+bind "=" "scale '100%'"
+bind ">" "rotate10;display"
+bind "A" "A"
+bind "B" "toggleDisplayBusy"
+bind "D" "diagonal_se"
+bind "E" "recording 'execute'"
+bind "F" "fliponce"
+bind "G" "toggleDesaturate"
+bind "H" "scale 'H'"
+bind "I" "toggleautonegate"
+bind "K" "if(_display_console==0){echo i:_filename.": ".i:_comment;toggleVerbosity}else{toggleVerbosity;}"
+bind "M" "mirroronce"
+bind "N" "next10"
+bind "P" "prev10"
+bind "Q" "recording 'stop'"
+bind "R" "rotate270"
+bind "S" "toggleDisplayStatus"
+bind "W" "display 'resize'" # if supported, resizes the window to match the current image pixels size
+bind "X" "diagonal_sw"
+bind "Y" "narrow" # shrink horizontally the image
+bind "[" "font_reduce;redisplay"
+bind "]" "font_magnify;redisplay"
+bind "^" "0;"
+bind "_" "_scale_style='';scale '100%'"
+bind "`" "toggleLimitMarked"
+bind "a" "scale 'a'"
+bind "b" "prev"
+bind "c" "align "center""
+bind "d" "diagonal_nw"
+bind "f" "flip"
+bind "g" "color 'desaturate';redisplay"
+bind "h" "pan_left"
+bind "i" "color 'negate';redisplay"
+bind "j" "pan_down"
+bind "k" "pan_up"
+bind "l" "pan_right"
+bind "m" "mirror"
+bind "n" "goto '+1f'"
+bind "o" "sort"
+bind "p" "goto '-1f'"
+bind "q" "quit"
+bind "r" "rotate90"
+bind "t" "align 'top'"
+bind "u" "list 'unmark'"
+bind "v" "toggleDisplayStatus"
+bind "w" "scale 'w'"
+bind "x" "diagonal_ne"
+bind "y" "widen" # widen horizontally the image
+bind "{" "font "prev";redisplay"
+bind "|" "toggle_font_auto_scale;redisplay"
+bind "}" "font "next";redisplay"
+bind "Up" "pan_up"
+bind "Down" "pan_down"
+bind "Right" "pan_right"
+bind "Left" "pan_left"
+bind "Home" "0;"
+bind "Del" "list 'pop';reload"
+bind "End" "$;"
+bind "PageUp" "if(_display_console==0){prev;}else{scu;}"
+bind "PageDown" "if(_display_console==0){next;}else{scd;}"
+
+*
